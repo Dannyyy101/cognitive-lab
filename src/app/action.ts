@@ -1,7 +1,7 @@
 'use server'
 export const getData = async () => {
     try {
-        const result = await fetch("http://127.0.0.1:5328");
+        const result = await fetch("/api/python");
         console.log(result)
         if (!result.ok) {
           throw new Error('Failed to fetch data');
