@@ -1,21 +1,15 @@
 'use client'
 import { useEffect, useState } from 'react';
+import { getData } from './action';
+
 
 export default function Home() {
   const [data, setData] = useState<string | null>(null);
 
   useEffect(() => {
     async function fetchData() {
-      try {
-        const result = await fetch("http://127.0.0.1:5328");
-        if (!result.ok) {
-          throw new Error('Failed to fetch data');
-        }
-        const text = await result.text();
-        setData(text);
-      } catch (error) {
-        console.error('Fetch error:', error);
-      }
+      const t = await getData();
+      setData(t)
     }
     fetchData();
   }, []);
