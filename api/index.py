@@ -3,7 +3,8 @@ from typing import Annotated, Union
 from fastapi import Depends, FastAPI
 from sqlmodel import SQLModel, Session, create_engine
 
-from api.entity.Example import Hero
+from api.models.Exercise import Exercise
+from api.models.Example import Hero
 from . import engine
 
 app = FastAPI()
@@ -27,3 +28,9 @@ def read_root(session: SessionDep):
     return None
 
 
+@app.post("/api/exercise/")
+def create_exercise(exercise: Exercise, session: SessionDep) -> Exercise:
+    session.add(exercise)
+    session.commit()
+    session.refresh(exercise)
+    return exercise
