@@ -1,0 +1,23 @@
+@startuml cognitive-lab
+title cognitive-lab
+
+class Exercise{
+    - id:number
+    - question:str
+    - answer:str
+    - type:Subject
+    + createNewExercise()
+    + getExerciseById()
+    + deleteExerciseById()
+    + updateExerciseById()
+}
+
+enum Subject{
+    MATH
+    MEDICINE
+    COMPUTER_SCIENCE
+}
+
+Subject --- Exercise
+
+@enduml
