@@ -1,36 +1,23 @@
-from typing import Annotated, Union
 
-from fastapi import Depends, FastAPI
-from sqlmodel import SQLModel, Session, create_engine
+from fastapi import FastAPI
 
-from api.models.Exercise import Exercise
-from api.models.Example import Hero
-from . import engine
+from api.models.Exercise import ExerciseNormal, ExerciseMultipleChoice
+from api.services.exerciseService import create_new_exercise
+from . import db
 
 app = FastAPI()
 
-def get_session():
-    with Session(engine) as session:
-        yield session
 
+@app.get("/api/exercises")
+def get_all_exercises():
+    users_ref = db.collection("exercises")
+    docs = users_ref.stream()
 
-SessionDep = Annotated[Session, Depends(get_session)]
+    result = []
+    for doc in docs:
+        result.append(doc.to_dict())
+    return result
 
-@app.post("/api/heroes/")
-def create_hero(hero: Hero, session: SessionDep) -> Hero:
-    session.add(hero)
-    session.commit()
-    session.refresh(hero)
-    return hero
-
-@app.get("/api/python")
-def read_root(session: SessionDep):
-    return None
-
-
-@app.post("/api/exercise/")
-def create_exercise(exercise: Exercise, session: SessionDep) -> Exercise:
-    session.add(exercise)
-    session.commit()
-    session.refresh(exercise)
-    return exercise
+@app.post("/api/exercises")
+def create_hero(exercise: ExerciseNormal | ExerciseMultipleChoice):
+    create_new_exercise(exercise)

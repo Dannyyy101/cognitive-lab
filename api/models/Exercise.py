@@ -1,7 +1,13 @@
-from sqlmodel import Field, SQLModel
 
-class Exercise(SQLModel, table=True):
-    id: int = Field(default=None, primary_key=True)
-    question: str
-    answer: str
-    subject: str
+
+from pydantic import BaseModel
+
+
+class ExerciseNormal(BaseModel):
+    question:str
+    answer:str
+
+class ExerciseMultipleChoice(BaseModel):
+    question:str
+    choices:list[str]
+    answer:str
