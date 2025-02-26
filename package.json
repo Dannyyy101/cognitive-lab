@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "flask-dev": "source .venv/bin/activate && pip3 install -r requirements.txt && python3 -m fastapi dev api/index.py",
+    "flask-dev": "source .venv/bin/activate && pip3 install -r requirements.txt && python3 -m fastapi dev api/main.py",
     "next-dev": "next dev",
     "dev": "concurrently \"npm run next-dev\" \"npm run flask-dev\"",
     "build": "next build",
@@ -11,6 +11,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@primer/primitives": "^10.3.4",
     "next": "15.1.7",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"

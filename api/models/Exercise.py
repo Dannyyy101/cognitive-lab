@@ -1,13 +1,12 @@
+class ExerciseBase():
+    type:str
 
-
-from pydantic import BaseModel
-
-
-class ExerciseNormal(BaseModel):
+class ExerciseNormal(ExerciseBase):
     question:str
     answer:str
+    
 
-class ExerciseMultipleChoice(BaseModel):
+class ExerciseMultipleChoice(ExerciseBase):
     question:str
     choices:list[str]
     answer:str

@@ -1,3 +1,4 @@
+from fastapi import FastAPI
 import firebase_admin
 from firebase_admin import credentials
 from firebase_admin import firestore
@@ -5,7 +6,6 @@ import os
 from dotenv import load_dotenv
 
 load_dotenv()
-
 
 cred = {
   "type": os.getenv('FIREBASE_SERVICE_ACCOUNT'),
