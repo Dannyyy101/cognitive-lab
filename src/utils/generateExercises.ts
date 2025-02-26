@@ -1,6 +1,10 @@
-import { ExerciseBase, ExerciseMultipleChoice, ExerciseNormal } from "@/types/exercise";
+import { ExerciseBase, ExerciseMultipleChoice, ExerciseNormal } from "@/types/models/exercise";
 
-export const generateExercises = async (data: Record<string, any>) => {
+type ExerciseData =
+  | { type: "normal"; } & ExerciseNormal
+  | { type: "multiple-choice"; } & ExerciseMultipleChoice;
+
+export const generateExercises = async (data: Record<string, ExerciseData>) => {
     const temp: ExerciseBase[] = []
 
     Object.keys(data).forEach(function(key) {

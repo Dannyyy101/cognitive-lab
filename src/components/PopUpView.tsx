@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect, useRef } from "react";
+import React, { useEffect, useRef } from "react";
 
 interface PopUpViewProps {
   children: React.ReactNode;
@@ -27,7 +27,7 @@ export const PopUpView: React.FC<PopUpViewProps> = ({
     return () => {
       window.removeEventListener("mousedown", handleClickOutside);
     };
-  }, []);
+  }, [handlePopUpClose]);
 
   return (
     <>

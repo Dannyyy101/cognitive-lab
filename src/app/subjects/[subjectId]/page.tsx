@@ -1,16 +1,10 @@
 "use client";
-import { getSubjectById } from "@/actions/subjectActions";
-import { MultipleChoiceExercise } from "@/components/exercises/MultipleChoiceExercise";
 import { NormalExercise } from "@/components/exercises/NormalExercise";
-import { Loading } from "@/components/Loading";
 import { PopUpView } from "@/components/PopUpView";
 import { useSubject } from "@/context/SubjectProvider";
-import { ExerciseBase, ExerciseMultipleChoice, ExerciseNormal } from "@/types/exercise";
-import { Subject } from "@/types/subject";
-import { useParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { ExerciseBase, ExerciseNormal } from "@/types/models/exercise";
 
-const types = ["normal", "multiple-choice"];
+import { useState } from "react";
 
 export default function Page() {
   const { subject } = useSubject();

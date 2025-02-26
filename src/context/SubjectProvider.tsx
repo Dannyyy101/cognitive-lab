@@ -1,6 +1,6 @@
 import { getSubjectById } from "@/actions/subjectActions";
 import { Loading } from "@/components/Loading";
-import { Subject } from "@/types/subject";
+import { Subject } from "@/types/models/subject";
 import { createContext, useContext, useEffect, useState } from "react";
 
 interface SubjectProviderProps {

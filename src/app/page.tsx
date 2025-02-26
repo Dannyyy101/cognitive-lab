@@ -2,12 +2,12 @@
 
 import { getAllSubjects } from "@/actions/subjectActions";
 import { Loading } from "@/components/Loading";
-import { Subject } from "@/types/subject";
+import { SubjectDTO } from "@/types/dtos/subjectDTO";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
 export default function Page() {
-  const [subjects, setSubjects] = useState<Subject[] | null>(null);
+  const [subjects, setSubjects] = useState<SubjectDTO[] | null>(null);
 
   useEffect(() => {
     const fetch = async () => {
@@ -29,7 +29,7 @@ export default function Page() {
 }
 
 interface SubjectDisplayProps {
-  subject: Subject;
+  subject: SubjectDTO;
 }
 
 const SubjectDisplay: React.FC<SubjectDisplayProps> = ({ subject }) => {

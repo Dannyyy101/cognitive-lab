@@ -1,5 +1,5 @@
 "use client";
-import { type ExerciseNormal } from "@/types/exercise";
+import { type ExerciseNormal } from "@/types/models/exercise";
 
 import pencil from "../../media/pencil.svg";
 import book from "../../media/book.svg";

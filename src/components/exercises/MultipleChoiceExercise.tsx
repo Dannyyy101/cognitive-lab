@@ -1,5 +1,5 @@
 "use client";
-import { type ExerciseMultipleChoice } from "@/types/exercise";
+import { type ExerciseMultipleChoice } from "@/types/models/exercise";
 import pencil from "../../media/pencil.svg";
 import book from "../../media/book.svg";
 import Image from "next/image";

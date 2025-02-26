@@ -1,11 +1,12 @@
 'use server'
 
-import { ExerciseBase } from "@/types/exercise";
+import { ExerciseBase } from "@/types/models/exercise";
+import { BACKEND_URL } from "@/utils/constants";
 
 export const createNewExercise = async (exerciseId: string, exercise: ExerciseBase) => {
 
     try {
-        const result = await fetch(`http://127.0.0.1:8000/api/exercises/${exerciseId}`, {
+        const result = await fetch(`${BACKEND_URL}/exercises/${exerciseId}`, {
             method: "POST",
             headers: {
                 'Content-Type': 'application/json',
