@@ -1,6 +1,6 @@
 
 export interface ExerciseBaseDTO {
-    id:string
+    id: string
     question: string;
     type: string;
 }
@@ -13,4 +13,8 @@ export interface ExerciseMultipleChoiceDTO extends ExerciseBaseDTO {
     answer: string;
     choices: string[]
 
+}
+
+export interface CombinedExerciseDTO extends ExerciseNormalDTO, ExerciseMultipleChoiceDTO {
+    [key: string]: string | number | boolean | undefined | string[];
 }

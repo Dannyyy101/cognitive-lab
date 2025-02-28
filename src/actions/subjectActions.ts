@@ -42,3 +42,14 @@ export const updateSubjectById = async (subjectId: string) => {
     }
 }
 
+export const addExercisesToSubject = async (subjectId: string, exerciseId: string) => {
+    try {
+        const result = await fetch(`${BACKEND_URL}/subjects/${subjectId}/exercises/${exerciseId}`, { method: "POST" });
+        if (!result.ok) {
+            throw new Error('Failed to fetch data');
+        }
+    } catch (error) {
+        console.error('Fetch error:', error);
+        return null;
+    }
+}

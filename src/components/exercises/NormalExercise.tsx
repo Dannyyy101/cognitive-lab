@@ -6,8 +6,12 @@ import book from "../../media/book.svg";
 
 import Image from "next/image";
 import { useState } from "react";
-import { createNewExercise, updateExerciseById } from "@/actions/exerciseActions";
+import {
+  createNewExercise,
+  updateExerciseById,
+} from "@/actions/exerciseActions";
 import { useSubject } from "@/context/SubjectProvider";
+import { addExercisesToSubject } from "@/actions/subjectActions";
 
 interface NormalExerciseProps {
   exercise: ExerciseNormal;
@@ -26,7 +30,9 @@ export const NormalExercise: React.FC<NormalExerciseProps> = ({
 
   const handleUpdateExercise = async () => {
     if (newElement) {
-      await createNewExercise(editedExercise.id, editedExercise);
+      const id = await createNewExercise(editedExercise);
+      console.log("id:", id)
+      await addExercisesToSubject(subject.id, id);
       const temp = [...subject.exercises];
       temp.push(editedExercise);
       setSubject({ ...subject, exercises: temp });
@@ -54,7 +60,7 @@ export const NormalExercise: React.FC<NormalExerciseProps> = ({
       >
         <Image src={edit ? pencil : book} alt="pencil"></Image>
       </button>
-      
+
       {newElement && (
         <select
           onChange={(e) => handleChangeExerciseType(e.target.value)}

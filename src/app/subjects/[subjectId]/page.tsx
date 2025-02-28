@@ -1,8 +1,10 @@
 "use client";
-import { NormalExercise } from "@/components/exercises/NormalExercise";
+import { CreateExercise } from "@/components/exercises/CreateExercise";
+import { Exercise } from "@/components/exercises/Exercise";
 import { PopUpView } from "@/components/PopUpView";
 import { useSubject } from "@/context/SubjectProvider";
-import { ExerciseBase, ExerciseNormal } from "@/types/models/exercise";
+import { CombinedExerciseDTO } from "@/types/dtos/exerciseDTO";
+import { ExerciseBase } from "@/types/models/exercise";
 
 import { useState } from "react";
 
@@ -48,14 +50,15 @@ export default function Page() {
       </section>
       {selectedExercise !== null && (
         <PopUpView handlePopUpClose={() => setSelectedExercise(null)}>
-          <NormalExercise
-            exercise={selectedExercise as ExerciseNormal}
-          ></NormalExercise>
+          <Exercise
+            subjectId={subject.id}
+            exercise={selectedExercise as CombinedExerciseDTO}
+          ></Exercise>
         </PopUpView>
       )}
       {createNewExercise && (
         <PopUpView handlePopUpClose={() => setCreateNewExercise(null)}>
-          <NormalExercise exercise={createNewExercise as ExerciseNormal} newElement={true}></NormalExercise>
+          <CreateExercise subjectId={subject.id} />
         </PopUpView>
       )}
     </main>

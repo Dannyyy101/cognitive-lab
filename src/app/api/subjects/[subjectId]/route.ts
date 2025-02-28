@@ -39,7 +39,7 @@ export async function GET(request: NextRequest
         const exercises = await Promise.all(
             data.exercises.map(async (exerciseRef: DocumentReference) => {
                 const exerciseDoc = await getDoc(exerciseRef);
-                return exerciseDoc.exists() ? exerciseDoc.data() : null;
+                return exerciseDoc.exists() ? {id:exerciseDoc.id, ...exerciseDoc.data()} : null;
             })
         );
 

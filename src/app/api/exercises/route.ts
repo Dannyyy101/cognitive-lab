@@ -23,7 +23,6 @@ export async function POST(req: NextRequest) {
   await setDoc(ref, body);
 
   return NextResponse.json(
-    { message: "Exercise was created sucessfully" },
-    { status: 201 }
+    ref.id
   );
 }
