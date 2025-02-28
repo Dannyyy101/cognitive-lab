@@ -2,10 +2,11 @@ import { ExerciseProvider } from "@/context/ExerciseProvider";
 import { Textarea } from "./Textarea";
 import { CombinedExerciseDTO } from "@/types/dtos/exerciseDTO";
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import leftArrow from "../../media/chevron-left.svg";
 import rightArrow from "../../media/chevron-right.svg";
+import { useSubject } from "@/context/SubjectProvider";
 
 interface LearnExerciseProps {
   subjectId?: string;
@@ -19,6 +20,13 @@ export const LearnExercise: React.FC<LearnExerciseProps> = ({
   previousExercise,
 }) => {
   const [showAnswer, setShowAnswer] = useState<boolean>(false);
+  const [progress, setProgess] = useState<number>(0);
+  const { subject } = useSubject();
+
+  useEffect(() => {
+    const index = subject.exercises.findIndex((e) => e.id === exercise.id);
+    setProgess(((index + 1) * 100) / subject.exercises.length);
+  }, [exercise]);
 
   return (
     <section className="flex flex-col items-center h-[40rem] relative w-[60rem]">
@@ -33,11 +41,19 @@ export const LearnExercise: React.FC<LearnExerciseProps> = ({
         <section className="w-full flex flex-col items-center mt-8">
           <Textarea index="question" edit={false} />
           {showAnswer && <Textarea index="answer" edit={false} />}
-          <button className="absolute right-8 bottom-8 w-32 bg-bgColor_accent_emphasis text-fgColor_white h-10 rounded-md flex justify-center items-center" onClick={() => setShowAnswer((prev) => !prev)}>
+          <button
+            className="absolute right-8 bottom-8 w-32 bg-bgColor_accent_emphasis text-fgColor_white h-10 rounded-md flex justify-center items-center"
+            onClick={() => setShowAnswer((prev) => !prev)}
+          >
             Show answer
           </button>
         </section>
       </ExerciseProvider>
+
+      <div
+        className="absolute bottom-0 left-0 bg-bgColor_accent_emphasis h-2 rounded-b-lg"
+        style={{ width: `${progress}%` }}
+      ></div>
     </section>
   );
 };
