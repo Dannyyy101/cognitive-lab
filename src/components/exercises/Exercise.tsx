@@ -6,6 +6,7 @@ import pencil from "../../media/pencil.svg";
 import book from "../../media/book.svg";
 import Image from "next/image";
 import { useState } from "react";
+import { DeleteButton } from "./DeleteButton";
 
 interface ExerciseProps {
   subjectId?: string;
@@ -25,9 +26,10 @@ export const Exercise: React.FC<ExerciseProps> = ({ subjectId, exercise }) => {
       <ExerciseProvider oldExercise={exercise}>
         <h1 className="text-3xl font-bold mt-8"></h1>
         <section className="w-full flex flex-col items-center mt-8">
-          <Textarea index="question" edit={edit}/>
-          <Textarea index="answer" edit={edit}/>
+          <Textarea index="question" edit={edit} />
+          <Textarea index="answer" edit={edit} />
           <SubmitButton subjectId={subjectId}>Speichern</SubmitButton>
+          <DeleteButton subjectId={subjectId}>Delete</DeleteButton>
         </section>
       </ExerciseProvider>
     </section>

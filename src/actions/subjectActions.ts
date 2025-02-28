@@ -53,3 +53,15 @@ export const addExercisesToSubject = async (subjectId: string, exerciseId: strin
         return null;
     }
 }
+
+export const removeExercisesFromSubject = async (subjectId: string, exerciseId: string) => {
+    try {
+        const result = await fetch(`${BACKEND_URL}/subjects/${subjectId}/exercises/${exerciseId}`, { method: "DELETE" });
+        if (!result.ok) {
+            throw new Error('Failed to fetch data');
+        }
+    } catch (error) {
+        console.error('Fetch error:', error);
+        return null;
+    }
+}

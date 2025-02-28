@@ -5,6 +5,7 @@ import { PopUpView } from "@/components/PopUpView";
 import { useSubject } from "@/context/SubjectProvider";
 import { CombinedExerciseDTO } from "@/types/dtos/exerciseDTO";
 import { ExerciseBase } from "@/types/models/exercise";
+import { LearnExercise } from "@/components/exercises/LearnExercise";
 
 import { useState } from "react";
 
@@ -15,6 +16,27 @@ export default function Page() {
   );
   const [createNewExercise, setCreateNewExercise] =
     useState<ExerciseBase | null>();
+  const [learnExercise, setLearnExercise] = useState<ExerciseBase | null>();
+
+  const handleNextExercise = () => {
+    const temp = [...subject.exercises];
+    if (learnExercise) {
+      let index = temp.findIndex((e) => e.id === learnExercise.id);
+      if (index !== -1 && ++index < temp.length) {
+        setLearnExercise({ ...temp[index] });
+      }
+    }
+  };
+
+  const handlePreviousExercise = () => {
+    const temp = [...subject.exercises];
+    if (learnExercise) {
+      let index = temp.findIndex((e) => e.id === learnExercise.id);
+      if (index !== -1 && --index >= 0) {
+        setLearnExercise(temp[index]);
+      }
+    }
+  };
 
   return (
     <main className="w-screen h-screen flex justify-center items-center">
@@ -23,9 +45,15 @@ export default function Page() {
           onClick={() =>
             setCreateNewExercise({ id: "", question: "", type: "" })
           }
-          className="border border-bgColor_open_emphasis bg-bgColor_open_emphasis text-fgColor_white w-32 h-8 rounded-md absolute right-0 -top-10"
+          className="font-semibold border border-borderColor_translucent bg-bgColor_inset text-fgColor-default w-28 h-8 rounded-md absolute right-28 -top-10"
         >
           Hinzufügen
+        </button>
+        <button
+          onClick={() => setLearnExercise(subject.exercises[0])}
+          className="border border-bgColor_open_emphasis bg-bgColor_open_emphasis text-fgColor_white w-24 h-8 rounded-md absolute right-0 -top-10"
+        >
+          Lernen
         </button>
         <h1 className="text-2xl text-fgColor_default">{subject.name}</h1>
         <hr />
@@ -59,6 +87,17 @@ export default function Page() {
       {createNewExercise && (
         <PopUpView handlePopUpClose={() => setCreateNewExercise(null)}>
           <CreateExercise subjectId={subject.id} />
+        </PopUpView>
+      )}
+      {learnExercise && (
+        <PopUpView handlePopUpClose={() => setLearnExercise(null)}>
+          <LearnExercise
+            key={learnExercise.id}
+            nextExercise={handleNextExercise}
+            previousExercise={handlePreviousExercise}
+            subjectId={subject.id}
+            exercise={learnExercise as CombinedExerciseDTO}
+          />
         </PopUpView>
       )}
     </main>

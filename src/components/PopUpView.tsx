@@ -1,4 +1,5 @@
 "use client";
+import { PopUpContext } from "@/context/PopUpContext";
 import React, { useEffect, useRef } from "react";
 
 interface PopUpViewProps {
@@ -31,16 +32,18 @@ export const PopUpView: React.FC<PopUpViewProps> = ({
 
   return (
     <>
-      <div
-        className="fixed inset-0 bg-bgColor_inverse opacity-50 z-40"
-        onClick={handlePopUpClose}
-      ></div>
-      <section
-        ref={inputRef}
-        className="shadow-xl z-50 fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-fit h-fit rounded-lg bg-white flex flex-col items-center"
-      >
-        {children}
-      </section>
+      <PopUpContext.Provider value={handlePopUpClose}>
+        <div
+          className="fixed inset-0 bg-bgColor_inverse opacity-50 z-40"
+          onClick={handlePopUpClose}
+        ></div>
+        <section
+          ref={inputRef}
+          className="shadow-xl z-50 fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-fit h-fit rounded-lg bg-white flex flex-col items-center"
+        >
+          {children}
+        </section>
+      </PopUpContext.Provider>
     </>
   );
 };

@@ -60,3 +60,19 @@ export const getExerciseById = async (exerciseId: string) => {
         return null;
     }
 }
+
+export const deleteExerciseById = async (exerciseId: string) => {
+    try {
+        const result = await fetch(`${BACKEND_URL}/exercises/${exerciseId}`, {
+            method: "DELETE"
+        });
+
+        if (!result.ok) {
+            throw new Error('Failed to fetch data');
+        }
+        
+    } catch (error) {
+        console.error('Fetch error:', error);
+        return null;
+    }
+}
