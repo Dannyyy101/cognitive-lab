@@ -1,7 +1,7 @@
 import { getSubjectById } from "@/actions/subjectActions";
 import { Loading } from "@/components/Loading";
-import { Subject } from "@/types/models/subject";
-import { createContext, useContext, useEffect, useState } from "react";
+import React, { createContext, useContext, useEffect, useState } from "react";
+import {SubjectDTO} from "@/types/dtos/subjectDTO";
 
 interface SubjectProviderProps {
   children: React.ReactNode;
@@ -9,8 +9,8 @@ interface SubjectProviderProps {
 }
 
 interface SubjectContextType {
-  subject: Subject;
-  setSubject: (subject: Subject) => void;
+  subject: SubjectDTO;
+  setSubject: (subject: SubjectDTO) => void;
 }
 
 const SubjectContext = createContext<SubjectContextType | undefined>(undefined);
@@ -19,7 +19,7 @@ export const SubjectProvider: React.FC<SubjectProviderProps> = ({
   children,
   subjectId,
 }) => {
-  const [subject, setSubject] = useState<Subject | null>(null);
+  const [subject, setSubject] = useState<SubjectDTO | null>(null);
 
   useEffect(() => {
     const fetchSubject = async () => {

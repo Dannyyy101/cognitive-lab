@@ -13,4 +13,8 @@ export interface SubjectFirebase {
     name: string;
     color: string;
     exercises:DocumentReference[]
+    parent: DocumentReference
+    children: DocumentReference[]
+    lastEdited: Date
+    createdOn: Date
 }

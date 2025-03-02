@@ -8,6 +8,7 @@ import { usePopUpClose } from "@/context/PopUpContext";
 import { useSubject } from "@/context/SubjectProvider";
 import { ButtonHTMLAttributes, useState } from "react";
 import { Loading } from "../Loading";
+import {uploadFile} from "@/actions/fileActions";
 
 interface SubmitButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   children: React.ReactNode;
@@ -40,6 +41,9 @@ export const SubmitButton: React.FC<SubmitButtonProps> = ({
       const id = await createNewExercise(exercise);
       if (subjectId) {
         await addExercisesToSubject(subjectId, id);
+        if(exercise.type === "image"){
+          await uploadFile(exercise.imageUrl as File); // Use the selected file directly
+        }
       }
       const temp = [...subject.exercises];
       temp.push(exercise);

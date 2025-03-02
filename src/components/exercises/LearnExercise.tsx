@@ -38,9 +38,17 @@ export const LearnExercise: React.FC<LearnExerciseProps> = ({
       </button>
       <ExerciseProvider oldExercise={exercise}>
         <h1 className="text-3xl font-bold mt-8"></h1>
-        <section className="w-full flex flex-col items-center mt-8">
-          <Textarea index="question" edit={false} />
-          {showAnswer && <Textarea index="answer" edit={false} />}
+        <section className="w-2/3 flex flex-col items-center mt-8 h-full">
+          <div className="w-full h-1/2 flex flex-col">
+            <h1 className="text-2xl w-full">Frage</h1>
+            <Textarea index="question" edit={false} />
+          </div>
+          {showAnswer && (
+            <div className="w-full h-1/2 flex flex-col">
+              <h1 className="text-2xl w-full">Antwort</h1>
+              <Textarea index="answer" edit={false} />
+            </div>
+          )}
           <button
             className="absolute right-8 bottom-8 w-32 bg-bgColor_accent_emphasis text-fgColor_white h-10 rounded-md flex justify-center items-center"
             onClick={() => setShowAnswer((prev) => !prev)}
