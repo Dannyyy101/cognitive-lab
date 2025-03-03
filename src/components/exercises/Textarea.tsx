@@ -12,7 +12,7 @@ export const Textarea: React.FC<TextInputProps> = ({ index, edit = true }) => {
     <>
       {edit ? (
         <textarea
-          className="resize-none border border-bgColor_neutral_emphasis pl-1 w-1/2 h-20 rounded-md mt-4 focus:outline-none"
+          className="resize-none border border-bgColor_neutral_emphasis pl-1 w-full h-20 mt-1 rounded-md focus:outline-none"
           value={exercise[index] as string}
           placeholder={index}
           onChange={(e) =>
@@ -20,7 +20,7 @@ export const Textarea: React.FC<TextInputProps> = ({ index, edit = true }) => {
           }
         />
       ) : (
-        <p className="border border-bgColor_neutral_emphasis pl-1 w-1/2 h-20 rounded-md mt-4">
+        <p className="border border-bgColor_neutral_emphasis pl-1 w-full h-20 rounded-md mt-1">
           {exercise[index] as string}
         </p>
       )}

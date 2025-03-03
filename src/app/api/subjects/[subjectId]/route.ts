@@ -32,6 +32,7 @@ export async function GET(request: NextRequest
                 id: postsSnapshot.id,
                 ...data,
                 exercises: [],
+                children: []
             })
         }
 
@@ -43,11 +44,19 @@ export async function GET(request: NextRequest
             })
         );
 
+        const children = await Promise.all(
+            data.children.map(async (childrenRef: DocumentReference) => {
+                const childrenDoc = await getDoc(childrenRef);
+                return childrenDoc.exists() ? {id:childrenDoc.id, ...childrenDoc.data()} : null;
+            })
+        );
+
         // Return the post with valid exercises
         return NextResponse.json({
             ...data,
             id: postsSnapshot.id,
-            exercises: exercises.filter((exercise) => exercise !== null), // Filter out null exercises
+            exercises: exercises.filter((exercise) => exercise !== null),
+            children: children.filter((children) => children !== null),
         });
     } catch (error) {
         console.error("Error fetching documents: ", error);

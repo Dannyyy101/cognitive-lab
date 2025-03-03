@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/firebase";
 import { collection, doc, getDocs, setDoc } from "firebase/firestore";
-import { ExerciseBaseDTO } from "@/types/dtos/exerciseDTO";
+import {CombinedExerciseDTO} from "@/types/dtos/exerciseDTO";
 import { exerciseConverter } from "@/lib/converter/exerciseConverter";
 
 const COLLECTION = "exercises"
@@ -16,9 +16,10 @@ export async function GET() {
   return NextResponse.json(postsList);
 }
 
-export async function POST(req: NextRequest) {
-  const body = await req.json() as ExerciseBaseDTO
 
+
+export async function POST(req: NextRequest) {
+  const body = await req.json() as CombinedExerciseDTO
   const ref = doc(collection(db, COLLECTION)).withConverter(exerciseConverter);
   await setDoc(ref, body);
 

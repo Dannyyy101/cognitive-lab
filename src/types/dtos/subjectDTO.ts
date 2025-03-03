@@ -1,11 +1,14 @@
-import { DocumentReference } from "firebase/firestore";
-import { ExerciseBaseDTO } from "./exerciseDTO";
+import {ExerciseBaseDTO} from "./exerciseDTO";
 
 export interface SubjectDTO {
     id: string;
     name: string;
     color: string;
     exercises: ExerciseBaseDTO[];
+    parent: SubjectDTO
+    children: SubjectDTO[]
+    lastEdited: Date
+    createdOn: Date
 }
 
 export interface SubjectWithExercisesDTO {
@@ -13,11 +16,4 @@ export interface SubjectWithExercisesDTO {
     name: string;
     color: string;
     exercises: ExerciseBaseDTO[];
-}
-
-export interface SubjectWithExercisePromisesDTO {
-    id: string;
-    name: string;
-    color: string;
-    exercises: DocumentReference[];
 }

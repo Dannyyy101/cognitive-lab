@@ -10,7 +10,6 @@ export async function GET() {
   const col = collection(db, COLLECTION).withConverter(subjectConverter);
   const postsSnapshot = await getDocs(col);
   const postsList = postsSnapshot.docs.map(doc => ({
-    id: doc.id,
     ...doc.data()
   }));
   return NextResponse.json(postsList);
