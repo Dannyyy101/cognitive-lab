@@ -1,5 +1,6 @@
 import {NextRequest, NextResponse} from "next/server";
 import {supabase} from "@/lib/supabase/client";
+import {sanitizeFileName} from "@/utils/sanatizeFilename";
 
 export async function POST(req: NextRequest) {
     try {
@@ -12,10 +13,10 @@ export async function POST(req: NextRequest) {
 
         const arrayBuffer = await file.arrayBuffer();
         const buffer = new Uint8Array(arrayBuffer);
-
+        console.log(encodeURI(file.name))
         const {data, error} = await supabase.storage
             .from("docs")
-            .upload(file.name, buffer);
+            .upload(sanitizeFileName(file.name), buffer);
 
 
         if (error) {

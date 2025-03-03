@@ -10,6 +10,9 @@ import {LearnExercise} from "@/components/exercises/LearnExercise";
 import {useState} from "react";
 import Link from "next/link";
 
+import folderIcon from "../../../media/file-directory.svg"
+import Image from "next/image";
+
 export default function Page() {
     const {subject} = useSubject();
     const [selectedExercise, setSelectedExercise] = useState<ExerciseBase | null>(
@@ -39,6 +42,7 @@ export default function Page() {
         }
     };
 
+
     return (
         <main className="w-screen h-screen flex justify-center items-center">
             <section className="w-2/3 font-bold relative">
@@ -62,10 +66,9 @@ export default function Page() {
                     <tbody className="">
                     {subject.children.map((child, index) => (
                         <tr key={index} className="border border-fgColor_default">
-                            <td className="text-fgColor_default h-8 pl-1">
-                                <Link href={`./${child.id}`}
-                                      className="w-full text-left"
-                                >
+                            <td className="text-fgColor_default h-8 pl-1 flex items-center">
+                                <Image className="mr-1" src={folderIcon} alt={"folder-icon"}/>
+                                <Link href={`./${child.id}`} className="w-full text-left">
                                     {child.name}
                                 </Link>
                             </td>

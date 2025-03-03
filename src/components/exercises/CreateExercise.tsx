@@ -21,8 +21,9 @@ export const CreateExercise: React.FC<CreateExerciseProps> = ({
                 <section className="w-2/3 flex flex-col items-center mt-8">
                     <TypeSwitch/>
                     <Textarea index="question"/>
-                    <UploadFile/>
+                    <UploadFile type={"question"}/>
                     <Textarea index="answer"/>
+                    <UploadFile type={"answer"}/>
                     <SubmitButton edit={false} subjectId={subjectId}>
                         Speichern
                     </SubmitButton>

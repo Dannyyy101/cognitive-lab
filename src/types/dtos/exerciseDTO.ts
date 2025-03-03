@@ -17,9 +17,10 @@ export interface ExerciseMultipleChoiceDTO extends ExerciseBaseDTO {
 
 export interface ExerciseImageDTO extends ExerciseBaseDTO {
     answer: string;
-    imageUrl: string | File;
+    answerImageUrl:string | File | null;
+    questionImageUrl:string | File | null;
 }
 
 export interface CombinedExerciseDTO extends ExerciseNormalDTO, ExerciseMultipleChoiceDTO, ExerciseImageDTO {
-    [key: string]: string | number | boolean | undefined | string[] | File;
+    [key: string]: string | number | boolean | undefined | string[] | File | null;
 }

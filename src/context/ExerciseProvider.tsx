@@ -40,7 +40,9 @@ export const ExerciseProvider: React.FC<ExerciseProviderProps> = ({
                         choices: [],
                         question: "",
                         type: "normal",
-                        imageUrl: ""
+                        imageUrl: null,
+                        questionImageUrl: null,
+                        answerImageUrl: null,
                     });
                 }
             } catch (error) {

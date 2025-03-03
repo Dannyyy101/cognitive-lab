@@ -21,7 +21,7 @@ export default function Page() {
 
     return (
         <main className="w-screen h-screen flex items-center justify-center">
-            {subjects.map((subject) => (
+            {subjects.map((subject) => (subject.parent === null &&
                 <SubjectDisplay subject={subject} key={subject.id}/>
             ))}
         </main>
