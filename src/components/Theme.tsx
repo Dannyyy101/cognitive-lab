@@ -11,8 +11,8 @@ export const Theme: React.FC<ThemeProps> = ({children}) => {
         let theme = localStorage.getItem("theme")
 
         if (!theme) {
-            localStorage.setItem("theme", "white")
-            theme = "white"
+            localStorage.setItem("theme", "light")
+            theme = "light"
         }
         document.body.setAttribute("data-color-mode", theme)
     }, []);
