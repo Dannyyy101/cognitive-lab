@@ -31,9 +31,9 @@ export async function DELETE(request: NextRequest) {
     }
 
     const washingtonRef = doc(db, COLLECTION, subjectId);
-    const docu = doc(db, "exercises", exerciseId)
+    const docu = doc(db, COLLECTION, exerciseId)
 
-    await updateDoc(washingtonRef, { exercises: arrayRemove(docu) })
+    await updateDoc(washingtonRef, { children: arrayRemove(docu) })
 
-    return NextResponse.json({})
+    return NextResponse.json({message: "success"})
 }

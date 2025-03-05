@@ -18,7 +18,7 @@ export const createNewSubject = async (subject: SubjectDTO) => {
         if (!result.ok) {
             throw new Error('Failed to create subject');
         }
-
+        return id
     } catch (error) {
         console.error('Fetch error:', error);
         return null;
@@ -79,6 +79,18 @@ export const addExercisesToSubject = async (subjectId: string, exerciseId: strin
 export const removeExercisesFromSubject = async (subjectId: string, exerciseId: string) => {
     try {
         const result = await fetch(`${BACKEND_URL}/subjects/${subjectId}/exercises/${exerciseId}`, {method: "DELETE"});
+        if (!result.ok) {
+            throw new Error('Failed to fetch data');
+        }
+    } catch (error) {
+        console.error('Fetch error:', error);
+        return null;
+    }
+}
+
+export const deleteSubject =async  (subjectId:string) =>{
+    try {
+        const result = await fetch(`${BACKEND_URL}/subjects/${subjectId}`, {method: "DELETE"});
         if (!result.ok) {
             throw new Error('Failed to fetch data');
         }

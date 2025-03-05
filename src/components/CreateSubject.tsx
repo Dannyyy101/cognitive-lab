@@ -2,6 +2,7 @@ import React, {useState} from "react";
 import {SubjectDTO} from "@/types/dtos/subjectDTO";
 import {useSubject} from "@/context/SubjectProvider";
 import {createNewSubject} from "@/actions/subjectActions";
+import {usePopUpClose} from "@/context/PopUpContext";
 
 interface CreateSubjectProps {
     children?: React.ReactNode
@@ -19,15 +20,15 @@ export const CreateSubject: React.FC<CreateSubjectProps> = ({children: _children
         exercises: [],
         lastEdited: new Date()
     })
-
+    const handlePopUpClose = usePopUpClose();
     const colorOptions = [{name: "red", hexCode: "#ce222d"}, {name: "green", hexCode: "#1c883c"}]
 
     const handleSaveNewSubject = async () => {
-        await createNewSubject({...newSubject, createdOn: new Date, lastEdited: new Date})
-        // TODO UPDATE PARENT SUBJECT
+        const id = await createNewSubject({...newSubject, createdOn: new Date, lastEdited: new Date})
         const temp = subject.children
-        temp.push(newSubject)
+        temp.push({...newSubject, id: id})
         setSubject({...subject, children: temp})
+        handlePopUpClose()
     }
 
     return (
