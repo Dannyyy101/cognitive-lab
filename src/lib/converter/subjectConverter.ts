@@ -4,7 +4,8 @@ import {db} from "@/lib/firebase";
 
 export const subjectConverter = {
     toFirestore: (subject: SubjectDTO) => {
-        return {...subject, parent: doc(db, "subjects", subject.parent.id)}
+        const {id: _id, ...subjectWithoutId} = subject
+        return {...subjectWithoutId, parent: doc(db, "subjects", subject.parent.id)}
     },
     fromFirestore: (snapshot: QueryDocumentSnapshot<DocumentData>, options: SnapshotOptions) => {
         const data = snapshot.data(options);
