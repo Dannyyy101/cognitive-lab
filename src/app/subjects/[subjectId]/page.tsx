@@ -156,7 +156,7 @@ export default function Page() {
                 </PopUpView>
             )}
             {learnExercise && (
-                <PopUpView handlePopUpClose={() => setLearnExercise(null)}>
+                <PopUpView handlePopUpClose={() => setLearnExercise(null)} closeOnOutsideClick={false}>
                     <LearnExercise
                         key={learnExercise.id}
                         nextExercise={handleNextExercise}

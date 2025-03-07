@@ -5,11 +5,13 @@ import React, { useEffect, useRef } from "react";
 interface PopUpViewProps {
   children: React.ReactNode;
   handlePopUpClose: () => void;
+  closeOnOutsideClick?:boolean
 }
 
 export const PopUpView: React.FC<PopUpViewProps> = ({
   children,
   handlePopUpClose,
+  closeOnOutsideClick = true
 }) => {
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -17,7 +19,7 @@ export const PopUpView: React.FC<PopUpViewProps> = ({
     const handleClickOutside = (event: MouseEvent) => {
       if (
         inputRef.current &&
-        !inputRef.current.contains(event.target as Node)
+        !inputRef.current.contains(event.target as Node) && closeOnOutsideClick
       ) {
         handlePopUpClose();
       }
@@ -35,7 +37,6 @@ export const PopUpView: React.FC<PopUpViewProps> = ({
       <PopUpContext.Provider value={handlePopUpClose}>
         <div
           className="fixed inset-0 bg-bgColor_inverse opacity-50 z-40"
-          onClick={handlePopUpClose}
         ></div>
         <section
           ref={inputRef}

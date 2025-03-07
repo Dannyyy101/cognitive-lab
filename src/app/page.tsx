@@ -11,13 +11,12 @@ export default async function Page(): Promise<ReactNode> {
     return <Loading />;
   }
   return (
-    <main className="w-screen h-screen flex items-center justify-center flex-wrap">
-      {subjects.map(
-        (subject) =>
-          subject.parent === null && (
-            <SubjectDisplay subject={subject} key={subject.id} />
-          ),
+    <main className="w-screen h-screen flex items-center justify-center">
+      <section className="flex items-center justify-center flex-wrap">
+      {subjects.filter((subject) => subject.parent === null).map((s) =>
+          <SubjectDisplay subject={s} key={s.id} />
       )}
+      </section>
     </main>
   );
 }
