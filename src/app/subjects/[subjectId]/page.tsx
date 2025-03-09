@@ -5,7 +5,7 @@ import {PopUpView} from "@/components/PopUpView";
 import {useSubject} from "@/context/SubjectProvider";
 import {CombinedExerciseDTO} from "@/types/dtos/exerciseDTO";
 import {ExerciseBase} from "@/types/models/exercise";
-import {LearnExercise} from "@/components/exercises/LearnExercise";
+import {LearnExercise} from "@/components/exercises/learn/LearnExercise";
 
 import {useRef, useState} from "react";
 
