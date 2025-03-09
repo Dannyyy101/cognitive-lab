@@ -1,7 +1,7 @@
 import {ExerciseProvider} from "@/context/ExerciseProvider";
 import {CombinedExerciseDTO} from "@/types/dtos/exerciseDTO";
 import Image from "next/image";
-import {useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 
 
 import {useSubject} from "@/context/SubjectProvider";
@@ -45,7 +45,8 @@ export const LearnExercise: React.FC<LearnExerciseProps> = ({
 
 
     return (
-        <section className="flex flex-col justify-center items-center h-screen md:h-[40rem] w-screen md:w-[40rem] relative lg:w-[60rem]">
+        <section
+            className="flex flex-col justify-center items-center h-screen md:h-[40rem] w-screen md:w-[40rem] relative lg:w-[60rem]">
             <button
                 className="absolute right-4 top-4"
                 onClick={() => handlePopUpClose()}>
@@ -58,10 +59,9 @@ export const LearnExercise: React.FC<LearnExerciseProps> = ({
             <ExerciseProvider oldExercise={exercise}>
                 <section className="w-3/4 flex flex-col items-center mt-12 h-full">
                     <h1 className="pl-4 text-3xl font-bold w-full">{subject.name}</h1>
-                    <div
-                        className="relative w-full h-2/3 mt-2 flex flex-col pt-4 border border-borderColor_default border-l-borderColor_accent_emphasis border-l-4 rounded-md">
+                    <Card>
                         <p className="absolute right-4 top-4 text-fgColor_neutral text-sm border border-borderColor_muted rounded-md w-16 text-center">{convertExerciseTypeIntoLabel(exercise.type)}</p>
-                        <div className="flex flex-col w-full h-4/5 px-4 relative">
+                        <CardContent>
                             <h1 className="text-xl font-medium w-full">Aufgabe {exerciseIndex + 1}</h1>
                             {/*TODO INFER THE QUESTION STYLE FROM TYPE*/}
                             <p className="mt-2 font-semibold">{exercise.question}</p>
@@ -69,19 +69,17 @@ export const LearnExercise: React.FC<LearnExerciseProps> = ({
                             {showAnswer &&
                                 <SolutionExercise className="absolute bottom-4 w-11/12" userInput={inputValue}/>
                             }
-                        </div>
-                        <div
-                            className="w-full border-t border-borderColor_default h-1/5 flex items-center justify-center">
+                        </CardContent>
+                        <CardBottom>
                             <div className="w-11/12 flex justify-end">
-                                <button
-                                    className="w-28 bg-bgColor_accent_emphasis text-fgColor_white h-10 rounded-md flex justify-center items-center"
+                                <button className="w-28 bg-bgColor_accent_emphasis text-fgColor_white h-10 rounded-md flex justify-center items-center"
                                     onClick={() => setShowAnswer((prev) => !prev)}
                                 >
                                     Antwort
                                 </button>
                             </div>
-                        </div>
-                    </div>
+                        </CardBottom>
+                    </Card>
 
                 </section>
             </ExerciseProvider>
@@ -93,3 +91,17 @@ export const LearnExercise: React.FC<LearnExerciseProps> = ({
         </section>
     );
 };
+
+export const Card: React.FC<{ children: React.ReactNode }> = ({children}) => {
+    return <div
+        className="relative w-full h-2/3 mt-2 flex flex-col pt-4 border border-borderColor_default border-l-borderColor_accent_emphasis border-l-4 rounded-md">{children}</div>
+}
+
+export const CardContent: React.FC<{ children: React.ReactNode }> = ({children}) => {
+    return <div className="flex flex-col w-full h-4/5 px-4 relative overflow-y-auto">{children}</div>
+}
+
+export const CardBottom: React.FC<{ children: React.ReactNode }> = ({children}) => {
+    return <div
+        className="w-full border-t border-borderColor_default h-1/5 flex items-center justify-center">{children}</div>
+}

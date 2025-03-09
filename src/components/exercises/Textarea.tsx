@@ -12,7 +12,7 @@ export const Textarea: React.FC<TextInputProps> = ({ index, edit = true }) => {
     <>
       {edit ? (
         <textarea
-          className="resize-none border border-bgColor_neutral_emphasis pl-1 w-full h-20 mt-1 rounded-md focus:outline-none"
+            className="resize-none mt-2 w-full min-h-24 border border-borderColor_default pl-2 rounded-md"
           value={exercise[index] as string}
           placeholder={index}
           onChange={(e) =>
