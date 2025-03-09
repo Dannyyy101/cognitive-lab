@@ -14,7 +14,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Home101",
+  title: "cognitive lab",
   description: "",
 };
 
@@ -31,7 +31,11 @@ export default function RootLayout({
         data-dark-theme="dark"
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-background_default`}
       >
-        <Theme>{children}</Theme>
+        <Theme>
+
+        {children}
+
+        </Theme>
       </body>
     </html>
   );

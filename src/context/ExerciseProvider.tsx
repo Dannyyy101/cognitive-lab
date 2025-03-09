@@ -43,6 +43,9 @@ export const ExerciseProvider: React.FC<ExerciseProviderProps> = ({
                         imageUrl: null,
                         questionImageUrl: null,
                         answerImageUrl: null,
+                        lastLearned: new Date(),
+                        createdOn: new Date(),
+                        lastEdited: new Date()
                     });
                 }
             } catch (error) {

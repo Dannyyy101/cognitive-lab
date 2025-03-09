@@ -2,6 +2,9 @@ export interface ExerciseBaseDTO {
     id: string
     question: string;
     type: ExerciseType
+    lastEdited:Date;
+    createdOn:Date;
+    lastLearned:Date
 }
 
 export type ExerciseType = "normal" | "multiple-choice" | "image";
@@ -22,5 +25,5 @@ export interface ExerciseImageDTO extends ExerciseBaseDTO {
 }
 
 export interface CombinedExerciseDTO extends ExerciseNormalDTO, ExerciseMultipleChoiceDTO, ExerciseImageDTO {
-    [key: string]: string | number | boolean | undefined | string[] | File | null;
+    [key: string]: string | number | boolean | undefined | string[] | File | null | Date;
 }

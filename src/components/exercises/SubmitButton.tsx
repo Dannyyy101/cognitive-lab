@@ -51,9 +51,9 @@ export const SubmitButton: React.FC<SubmitButtonProps> = ({
             }
 
 
-            const id = await createNewExercise(exercise);
+            const newExercise = await createNewExercise(exercise);
             if (subjectId) {
-                await addExercisesToSubject(subjectId, id);
+                await addExercisesToSubject(subjectId, newExercise.id);
 
             }
             const temp = [...subject.exercises];

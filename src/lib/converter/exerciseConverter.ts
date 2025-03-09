@@ -1,9 +1,8 @@
-import { ExerciseBaseDTO, ExerciseMultipleChoiceDTO } from "@/types/dtos/exerciseDTO";
-import { ExerciseBase } from "@/types/models/exercise";
+import {CombinedExerciseDTO, ExerciseBaseDTO, ExerciseMultipleChoiceDTO} from "@/types/dtos/exerciseDTO";
 import { DocumentData, QueryDocumentSnapshot, SnapshotOptions } from "firebase/firestore";
 
 export const exerciseConverter = {
-    toFirestore: (exercise: ExerciseBase) => {
+    toFirestore: (exercise: CombinedExerciseDTO) => {
         const { id:_id, ...exerciseWithoutId } = exercise;
         return exerciseWithoutId;
     },
