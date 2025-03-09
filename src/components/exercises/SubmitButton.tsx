@@ -68,7 +68,7 @@ export const SubmitButton: React.FC<SubmitButtonProps> = ({
         <button
             {...props}
             onClick={handleCreateExercise}
-            className="absolute right-8 bottom-8 w-32 bg-bgColor_accent_emphasis text-fgColor_white h-10 rounded-md flex justify-center items-center"
+            className="w-28 bg-bgColor_accent_emphasis text-fgColor_white h-10 rounded-md flex justify-center items-center"
         >
             {isLoading ? <Loading/> : children}
         </button>
