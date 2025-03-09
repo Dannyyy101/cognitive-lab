@@ -8,25 +8,22 @@ import {ExerciseBase} from "@/types/models/exercise";
 import {LearnExercise} from "@/components/exercises/LearnExercise";
 
 import {useRef, useState} from "react";
-import Link from "next/link";
 
-import folderIcon from "../../../media/file-directory.svg"
 import triangleIcon from "../../../media/triangle-down.svg"
 import Image from "next/image";
 import {useClickedOutside} from "@/hooks/useClickedOutside";
 import {SubjectDTO} from "@/types/dtos/subjectDTO";
 import {CreateSubject} from "@/components/CreateSubject";
-import trashIcon from "../../../media/trash.svg"
-import {deleteSubject} from "@/actions/subjectActions";
-import {useRouter} from "next/navigation";
+import {Explorer} from "@/components/Explorer";
+import {getTimeView} from "@/utils/time";
+import {setLearnedExerciseById} from "@/actions/exerciseActions";
 
 export default function Page() {
-    const {subject} = useSubject();
+    const {subject, setSubject} = useSubject();
     const [selectedExercise, setSelectedExercise] = useState<ExerciseBase | null>(null);
     const [createNewExercise, setCreateNewExercise] = useState<ExerciseBase | null>();
     const [createNewSubject, setCreateNewSubject] = useState<SubjectDTO | null>();
     const [learnExercise, setLearnExercise] = useState<ExerciseBase | null>();
-    const router = useRouter()
     const popupRef = useRef<HTMLDivElement>(null);
 
     const [createPopUpVisible, setCreatePopUpVisible] = useClickedOutside<HTMLDivElement>(popupRef)
@@ -36,6 +33,7 @@ export default function Page() {
         if (learnExercise) {
             let index = temp.findIndex((e) => e.id === learnExercise.id);
             if (index !== -1 && ++index < temp.length) {
+                updateLastLearned(index)
                 setLearnExercise({...temp[index]});
             }
         }
@@ -46,21 +44,24 @@ export default function Page() {
         if (learnExercise) {
             let index = temp.findIndex((e) => e.id === learnExercise.id);
             if (index !== -1 && --index >= 0) {
+                updateLastLearned(index)
                 setLearnExercise(temp[index]);
             }
         }
     };
 
-    const handleDeleteSubject = async () => {
-        console.log(subject)
-        await deleteSubject(subject.id)
-        router.push(`/subjects/${subject.parent.id}`)
+    const updateLastLearned = async (index: number) => {
+        const temp = [...subject.exercises];
+        temp[index].lastLearned = new Date();
+        setSubject({...subject, exercises: temp})
+        await setLearnedExerciseById(temp[index].id)
     }
 
-
+    console.log(subject)
     return (
         <main className="w-screen h-screen flex justify-center items-center">
-            <section className="w-10/12 font-bold relative flex flex-col md:flex-row 3/4">
+            <Explorer/>
+            <section className="ml-8 w-10/12 font-bold relative flex flex-col md:flex-row 3/4">
                 <section className="w-full relative md:w-9/12">
                     <div className="w-32 h-8 rounded-md absolute right-28 -top-6">
                         <button
@@ -96,7 +97,10 @@ export default function Page() {
                     </div>
 
                     <button
-                        onClick={() => setLearnExercise(subject.exercises[0])}
+                        onClick={() => {
+                            setLearnExercise(subject.exercises[0])
+                            updateLastLearned(0)
+                        }}
                         className="border border-bgColor_open_emphasis bg-bgColor_open_emphasis text-fgColor_white w-24 h-8 rounded-md absolute right-0 -top-6"
                     >
                         Lernen
@@ -106,19 +110,9 @@ export default function Page() {
                     <hr/>
                     <table className="w-full border-collapse">
                         <tbody className="">
-                        {subject.children.map((child, index) => (
-                            <tr key={index} className="border border-fgColor_default">
-                                <td className="text-fgColor_default h-8 pl-1 flex items-center">
-                                    <Image className="mr-1" src={folderIcon} alt={"folder-icon"}/>
-                                    <Link href={`./${child.id}`} className="w-full text-left">
-                                        {child.name}
-                                    </Link>
-                                </td>
-                            </tr>
-                        ))}
                         {subject.exercises.map((exercise, index) => (
                             <tr key={index} className="border border-fgColor_default">
-                                <td className="text-fgColor_default h-8 pl-1">
+                                <td className="text-fgColor_default h-8 pl-1 w-[85%]">
                                     <button
                                         className="w-full text-left"
                                         onClick={() => {
@@ -128,14 +122,14 @@ export default function Page() {
                                         {exercise.question}
                                     </button>
                                 </td>
+                                <td className="">
+                                    {getTimeView((new Date().getTime() - new Date(exercise.lastLearned).getTime()) / 60 / 1000)}
+                                </td>
                             </tr>
                         ))}
                         </tbody>
                     </table>
                 </section>
-                <div className="ml-8 flex items-center h-10 w-3/12"><p className="">Infos</p>
-                    <button className="h-5 w-full" onClick={handleDeleteSubject}><Image src={trashIcon} alt={"trashIcon"} width={20} height={20}/></button>
-                </div>
             </section>
             {selectedExercise !== null && (
                 <PopUpView handlePopUpClose={() => setSelectedExercise(null)}>
@@ -156,7 +150,7 @@ export default function Page() {
                 </PopUpView>
             )}
             {learnExercise && (
-                <PopUpView handlePopUpClose={() => setLearnExercise(null)}>
+                <PopUpView handlePopUpClose={() => setLearnExercise(null)} closeOnOutsideClick={false}>
                     <LearnExercise
                         key={learnExercise.id}
                         nextExercise={handleNextExercise}

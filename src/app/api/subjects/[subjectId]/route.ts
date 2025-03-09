@@ -48,7 +48,7 @@ export async function GET(request: NextRequest) {
       data.exercises.map(async (exerciseRef: DocumentReference) => {
         const exerciseDoc = await getDoc(exerciseRef);
         return exerciseDoc.exists()
-          ? { id: exerciseDoc.id, ...exerciseDoc.data() }
+          ? { ...exerciseDoc.data(), id: exerciseDoc.id, lastLearned: new Date(exerciseDoc.data().lastLearned.seconds * 1000) }
           : null;
       }),
     );
@@ -76,7 +76,7 @@ export async function GET(request: NextRequest) {
       id: postsSnapshot.id,
       exercises: exercises.filter((exercise) => exercise !== null),
       children: children.filter((children) => children !== null),
-      parent: parent,
+      parent: parent
     });
   } catch (error) {
     console.error("Error fetching documents: ", error);
