@@ -5,6 +5,9 @@ import {UploadFile} from "@/components/exercises/UploadFile";
 import React from "react";
 import {TypeSwitch} from "@/components/exercises/TypeSwitch";
 import {Card, CardBottom, CardContent} from "@/components/exercises/learn/LearnExercise";
+import { usePopUpClose } from "@/context/PopUpContext";
+import xIcon from "../../media/x.svg"
+import Image from "next/image";
 
 interface CreateExerciseProps {
     subjectId?: string;
@@ -13,10 +16,16 @@ interface CreateExerciseProps {
 export const CreateExercise: React.FC<CreateExerciseProps> = ({
                                                                   subjectId,
                                                               }) => {
+                                                                const handlePopUpClose = usePopUpClose()
 
     return (
         <section
             className="flex flex-col justify-center items-center h-screen md:h-[40rem] w-screen md:w-[40rem] relative lg:w-[60rem]">
+                <button
+                className="absolute right-8 top-8"
+                onClick={() => handlePopUpClose()}>
+                <Image src={xIcon} alt={"x-icon"}/>
+            </button>
             <ExerciseProvider>
                 <section className="w-3/4 flex flex-col items-center mt-12 h-full">
                     <h1 className="pl-4 text-3xl font-bold w-full">Erstelle eine neue Übung</h1>

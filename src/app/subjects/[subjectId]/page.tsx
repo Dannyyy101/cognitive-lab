@@ -59,10 +59,10 @@ export default function Page() {
 
     console.log(subject)
     return (
-        <main className="w-screen h-screen flex justify-center items-center">
+        <main className="flex justify-start items-center">
             <Explorer/>
-            <section className="ml-8 w-10/12 font-bold relative flex flex-col md:flex-row 3/4">
-                <section className="w-full relative md:w-9/12">
+            <section className="ml-8 w-9/12 font-bold relative flex flex-col md:flex-row 3/4">
+                <section className="w-11/12 relative">
                     <div className="w-32 h-8 rounded-md absolute right-28 -top-6">
                         <button
                             onClick={() =>

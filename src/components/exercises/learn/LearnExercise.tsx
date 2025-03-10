@@ -48,7 +48,7 @@ export const LearnExercise: React.FC<LearnExerciseProps> = ({
         <section
             className="flex flex-col justify-center items-center h-screen md:h-[40rem] w-screen md:w-[40rem] relative lg:w-[60rem]">
             <button
-                className="absolute right-4 top-4"
+                className="absolute right-8 top-8"
                 onClick={() => handlePopUpClose()}>
                 <Image src={xIcon} alt={"x-icon"}/>
             </button>
