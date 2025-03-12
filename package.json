@@ -16,7 +16,6 @@
     "@supabase/supabase-js": "^2.49.1",
     "@uiw/react-markdown-preview": "^5.1.3",
     "firebase": "^11.4.0",
-    "firebase-admin": "^13.2.0",
     "next": "15.1.7",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
