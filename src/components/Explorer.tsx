@@ -11,19 +11,20 @@ export const Explorer = () => {
     const [visible, setVisible] = useState<boolean>(false)
     return (
         <>
-            <button onClick={() => setVisible((prevState) => !prevState)} className={`z-[60] absolute top-4 ${visible ? "left-40" : "left-4"}`}>
-                <Image src={hamburgerIcon} alt={"hamburger-icon"}/></button>
-            <section
-                className={`z-50 bg-bgColor_muted h-screen w-52 ${visible ? "absolute" : "hidden"} justify-center top-0 left-0`}>
-                <div className="mt-8 flex flex-col w-full">
-                    <h1 className="text-xl font-bold pl-2">Subjects</h1>
-                    {subject.subject.children.map((child) => <Link href={`/subjects/${child.id}`} className="flex"
-                                                                   key={child.id}><Image className="mr-1"
-                                                                                         src={folderIcon}
-                                                                                         alt={"folder-icon"}/><Folder
-                        subject={child}/></Link>)}
-                </div>
-            </section>
+        <button onClick={() => setVisible((prevState) => !prevState)}
+                className={`z-[41] absolute top-24 ${visible ? "left-40" : "left-4"}`}>
+            <Image src={hamburgerIcon} alt={"hamburger-icon"}/></button>
+        <section
+            className={`z-40 bg-bgColor_muted h-screen w-52 ${visible ? "absolute" : "hidden"} justify-center top-0 left-0`}>
+            <div className="mt-32 flex flex-col w-full">
+                <h1 className="text-xl font-bold pl-2">Subjects</h1>
+                {subject.subject.children.map((child) => <Link href={`/subjects/${child.id}`} className="flex pl-2"
+                                                               key={child.id}><Image className="mr-1"
+                                                                                     src={folderIcon}
+                                                                                     alt={"folder-icon"}/><Folder
+                    subject={child}/></Link>)}
+            </div>
+        </section>
         </>
     )
 }

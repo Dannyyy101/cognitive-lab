@@ -2,10 +2,10 @@
 
 import {BACKEND_URL} from "@/utils/constants";
 import {collection, doc, setDoc, updateDoc} from "firebase/firestore";
-import {db} from "@/lib/firebase";
 import {exerciseConverter} from "@/lib/converter/exerciseConverter";
 import {CombinedExerciseDTO} from "@/types/dtos/exerciseDTO";
 import {filterExerciseFields} from "@/utils/exerciseFunctions";
+import {db} from "@/lib/firebase/clientApp";
 
 const COLLECTION = "exercises"
 

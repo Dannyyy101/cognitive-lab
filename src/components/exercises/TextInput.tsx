@@ -1,17 +1,19 @@
 import { useExercise } from "@/context/ExerciseProvider";
+import React from "react";
 
 interface TextInputProps {
   value: string;
+  placeholder:string
 }
 
-export const TextInput: React.FC<TextInputProps> = ({ value }) => {
+export const TextInput: React.FC<TextInputProps> = ({ value, placeholder }) => {
   const { exercise, setExercise } = useExercise();
 
   return (
     <input
-      className="resize-none border border-bgColor_neutral_emphasis pl-1 w-1/2 h-10 rounded-md mt-4 focus:outline-none"
+        className="w-full h-full border border-borderColor_default pl-2 rounded-md"
       value={exercise[value] as string}
-      placeholder={value}
+      placeholder={placeholder}
       onChange={(e) => setExercise({ ...exercise, [value]: e.target.value })}
     />
   );

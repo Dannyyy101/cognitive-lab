@@ -1,6 +1,6 @@
 import {SubjectDTO} from "@/types/dtos/subjectDTO";
 import {doc, DocumentData, QueryDocumentSnapshot, SnapshotOptions} from "firebase/firestore";
-import {db} from "@/lib/firebase";
+import {db} from "@/lib/firebase/clientApp";
 
 export const subjectConverter = {
     toFirestore: (subject: SubjectDTO) => {

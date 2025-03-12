@@ -1,42 +1,47 @@
-import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import type {Metadata} from "next";
+import {Geist, Geist_Mono} from "next/font/google";
 import "./globals.css";
-import { Theme } from "@/components/Theme";
+import {Theme} from "@/components/Theme";
+import {Header} from "@/components/header/Header";
+import React from "react";
+import {getAuthenticatedAppForUser} from "@/lib/firebase/serverApp";
 
 const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
+    variable: "--font-geist-sans",
+    subsets: ["latin"],
 });
 
 const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+    variable: "--font-geist-mono",
+    subsets: ["latin"],
 });
 
 export const metadata: Metadata = {
-  title: "cognitive lab",
-  description: "",
+    title: "cognitive lab",
+    description: "",
 };
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
+export default async function RootLayout({
+                                             children,
+                                         }: Readonly<{
+    children: React.ReactNode;
 }>) {
-  return (
-    <html lang="en">
-      <body
-        data-color-mode="light"
-        data-light-theme="light"
-        data-dark-theme="dark"
-        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-background_default`}
-      >
+    const { currentUser } = await getAuthenticatedAppForUser();
+    return (
+        <html lang="en">
+        <body
+            data-color-mode="light"
+            data-light-theme="light"
+            data-dark-theme="dark"
+            className={`${geistSans.variable} ${geistMono.variable} antialiased bg-background_default`}
+        >
         <Theme>
 
-        {children}
+                <Header initialUser={currentUser}/>
+                {children}
 
         </Theme>
-      </body>
-    </html>
-  );
+        </body>
+        </html>
+    );
 }

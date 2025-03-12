@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
-import { db } from "@/lib/firebase";
 import { collection, doc, getDocs, setDoc } from "firebase/firestore";
 import {CombinedExerciseDTO} from "@/types/dtos/exerciseDTO";
 import { exerciseConverter } from "@/lib/converter/exerciseConverter";
+import {db} from "@/lib/firebase/clientApp";
 
 const COLLECTION = "exercises"
 

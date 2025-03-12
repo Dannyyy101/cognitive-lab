@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { db } from "@/lib/firebase";
 import { arrayRemove, arrayUnion, doc, updateDoc } from "firebase/firestore";
+import {db} from "@/lib/firebase/clientApp";
 
 const COLLECTION = "subjects"
 

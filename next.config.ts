@@ -10,7 +10,7 @@ const nextConfig = {
     },
     reactStrictMode: false,
     images: {
-      domains: ['hwoergrnshbhumndrgue.supabase.co'],
+      domains: ['hwoergrnshbhumndrgue.supabase.co', 'lh3.googleusercontent.com'],
     }
   }
   
