@@ -23,7 +23,7 @@ const eslintConfig = [
         },
       ],
       // Other custom rules
-      "@typescript-eslint/explicit-function-return-type": "warn",
+      "@typescript-eslint/explicit-function-return-type": "off",
     },
   },
 ];

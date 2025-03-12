@@ -5,6 +5,7 @@ export interface ExerciseBaseDTO {
     lastEdited:Date;
     createdOn:Date;
     lastLearned:Date
+    documentationUrl?:string
 }
 
 export type ExerciseType = "normal" | "multiple-choice" | "image";

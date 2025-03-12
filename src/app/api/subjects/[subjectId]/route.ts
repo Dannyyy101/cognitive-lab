@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
-import { db } from "@/lib/firebase";
 import { deleteDoc, doc, DocumentReference, getDoc } from "firebase/firestore";
 import { subjectWithExercisesConverter } from "@/lib/converter/subjectWithExercisesConverter";
 import { BACKEND_URL } from "@/utils/constants";
+import {db} from "@/lib/firebase/clientApp";
 
 const COLLECTION = "subjects";
 

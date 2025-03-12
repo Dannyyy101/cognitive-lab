@@ -5,9 +5,10 @@ import {UploadFile} from "@/components/exercises/UploadFile";
 import React from "react";
 import {TypeSwitch} from "@/components/exercises/TypeSwitch";
 import {Card, CardBottom, CardContent} from "@/components/exercises/learn/LearnExercise";
-import { usePopUpClose } from "@/context/PopUpContext";
+import {usePopUpClose} from "@/context/PopUpContext";
 import xIcon from "../../media/x.svg"
 import Image from "next/image";
+import {TextInput} from "@/components/exercises/TextInput";
 
 interface CreateExerciseProps {
     subjectId?: string;
@@ -16,12 +17,11 @@ interface CreateExerciseProps {
 export const CreateExercise: React.FC<CreateExerciseProps> = ({
                                                                   subjectId,
                                                               }) => {
-                                                                const handlePopUpClose = usePopUpClose()
-
+    const handlePopUpClose = usePopUpClose()
     return (
         <section
             className="flex flex-col justify-center items-center h-screen md:h-[40rem] w-screen md:w-[40rem] relative lg:w-[60rem]">
-                <button
+            <button
                 className="absolute right-8 top-8"
                 onClick={() => handlePopUpClose()}>
                 <Image src={xIcon} alt={"x-icon"}/>
@@ -39,10 +39,18 @@ export const CreateExercise: React.FC<CreateExerciseProps> = ({
                             <UploadFile type={"answer"}/>
                         </CardContent>
                         <CardBottom>
-                            <div className="w-11/12 flex justify-end">
-                                <SubmitButton edit={false} subjectId={subjectId}>
-                                    Speichern
-                                </SubmitButton>
+                            <div className="w-11/12 flex">
+                                <div className="w-1/3">
+                                    <div
+                                        className="flex items-center w-40 justify-center rounded-md h-10">
+                                        <TextInput placeholder="Link zur Doku" value={"documentationUrl"}/>
+                                    </div>
+                                </div>
+                                <div className="w-2/3 flex justify-end">
+                                    <SubmitButton edit={false} subjectId={subjectId}>
+                                        Speichern
+                                    </SubmitButton>
+                                </div>
                             </div>
                         </CardBottom>
                     </Card>

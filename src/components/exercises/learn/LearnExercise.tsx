@@ -10,6 +10,7 @@ import {convertExerciseTypeIntoLabel} from "@/utils/exerciseFunctions";
 import {Arrow} from "@/components/card/Arrow";
 
 import xIcon from "../../../media/x.svg"
+import questionIcon from "../../../media/question.svg"
 import {SolutionExercise} from "@/components/exercises/learn/SolutionExercise";
 import {UserInputExercise} from "@/components/exercises/learn/UserInputExercise";
 
@@ -71,12 +72,25 @@ export const LearnExercise: React.FC<LearnExerciseProps> = ({
                             }
                         </CardContent>
                         <CardBottom>
-                            <div className="w-11/12 flex justify-end">
-                                <button className="w-28 bg-bgColor_accent_emphasis text-fgColor_white h-10 rounded-md flex justify-center items-center"
-                                    onClick={() => setShowAnswer((prev) => !prev)}
-                                >
-                                    Antwort
-                                </button>
+                            <div className="w-11/12 flex">
+                                <div className="w-1/3">
+                                    {exercise.documentationUrl &&
+                                        <a target="_blank" rel="noopener noreferrer"
+                                            className="flex items-center w-40 justify-center rounded-md h-10 border border-borderColor_default"
+                                            href={exercise.documentationUrl}>
+                                            <Image src={questionIcon} alt={"question-icon"}/>
+                                            <p className="ml-1">Dokumentation</p>
+                                        </a>
+                                    }
+                                </div>
+                                <div className="w-2/3 flex justify-end">
+                                    <button
+                                        className="w-28 bg-bgColor_accent_emphasis text-fgColor_white h-10 rounded-md flex justify-center items-center"
+                                        onClick={() => setShowAnswer((prev) => !prev)}
+                                    >
+                                        Antwort
+                                    </button>
+                                </div>
                             </div>
                         </CardBottom>
                     </Card>

@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
-import { db } from "@/lib/firebase";
 import { deleteDoc, doc, getDoc, updateDoc } from "firebase/firestore";
 import { exerciseConverter } from "@/lib/converter/exerciseConverter";
+import {db} from "@/lib/firebase/clientApp";
 
 const COLLECTION = "exercises"
 
