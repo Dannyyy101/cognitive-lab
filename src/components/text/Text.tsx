@@ -1,4 +1,3 @@
-import MarkdownPreview from '@uiw/react-markdown-preview';
 import React from "react";
 
 interface TextProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -7,6 +6,6 @@ interface TextProps extends React.HTMLAttributes<HTMLDivElement> {
 
 export const Text: React.FC<TextProps> = ({ children, ...props }) => {
     return (
-        <MarkdownPreview {...props} source={children} />
+        <></>
     );
 };
