@@ -1,30 +1,34 @@
+export type ExerciseType = "text" | "multiple-choice" | "image";
+
 export interface ExerciseBaseDTO {
-    id: string
-    question: string;
-    type: ExerciseType
-    lastEdited:Date;
-    createdOn:Date;
-    lastLearned:Date
-    documentationUrl?:string
+  id: string;
+  question: ExerciseComponent[];
+  answer: ExerciseComponent[]; // only one answer is allowed, but Image components could be necessary
+  lastEdited: Date;
+  createdOn: Date;
+  documentationUrl?: string;
+  authorId: string;
 }
 
-export type ExerciseType = "normal" | "multiple-choice" | "image";
+export type ExerciseComponent =
+  | ExerciseTextComponent
+  | ExerciseImageComponent
+  | ExerciseMultipleChoiceComponent;
 
-export interface ExerciseNormalDTO extends ExerciseBaseDTO {
-    answer: string;
+export interface ExerciseTextComponent {
+  type: "text";
+  content: string;
 }
 
-export interface ExerciseMultipleChoiceDTO extends ExerciseBaseDTO {
-    answer: string;
-    choices: string[]
+export interface ExerciseImageComponent {
+  type: "image";
+  imageUrl: string;
 }
 
-export interface ExerciseImageDTO extends ExerciseBaseDTO {
-    answer: string;
-    answerImageUrl:string | File | null;
-    questionImageUrl:string | File | null;
+export interface ExerciseMultipleChoiceComponent {
+  type: "multiple-choice";
+  choices: string[];
+  correctChoice: string;
 }
 
-export interface CombinedExerciseDTO extends ExerciseNormalDTO, ExerciseMultipleChoiceDTO, ExerciseImageDTO {
-    [key: string]: string | number | boolean | undefined | string[] | File | null | Date;
-}
+export type ExerciseTyp = "image" | "text" | "multiple-choice";

@@ -1,17 +1,17 @@
 import {getExerciseById} from "@/actions/exerciseActions";
 import {Loading} from "@/components/Loading";
-import {CombinedExerciseDTO} from "@/types/dtos/exerciseDTO";
 import React, {createContext, useContext, useEffect, useState} from "react";
+import {ExerciseBaseDTO} from "@/types/dtos/exerciseDTO";
 
 interface ExerciseProviderProps {
     children: React.ReactNode;
     exerciseId?: string;
-    oldExercise?: CombinedExerciseDTO;
+    oldExercise?: ExerciseBaseDTO;
 }
 
 interface ExerciseContextType {
-    exercise: CombinedExerciseDTO;
-    setExercise: (exercise: CombinedExerciseDTO) => void;
+    exercise: ExerciseBaseDTO;
+    setExercise: (exercise: ExerciseBaseDTO) => void;
 }
 
 const ExerciseContext = createContext<ExerciseContextType | undefined>(
@@ -23,7 +23,7 @@ export const ExerciseProvider: React.FC<ExerciseProviderProps> = ({
                                                                       exerciseId,
                                                                       oldExercise,
                                                                   }) => {
-    const [exercise, setExercise] = useState<CombinedExerciseDTO | null>(null);
+    const [exercise, setExercise] = useState<ExerciseBaseDTO | null>(null);
 
     useEffect(() => {
         const fetchExercise = async () => {
@@ -36,16 +36,12 @@ export const ExerciseProvider: React.FC<ExerciseProviderProps> = ({
                 } else {
                     setExercise({
                         id: "",
-                        answer: "",
-                        choices: [],
-                        question: "",
-                        type: "normal",
-                        imageUrl: null,
-                        questionImageUrl: null,
-                        answerImageUrl: null,
-                        lastLearned: new Date(),
+                        answer: [],
+                        question: [],
                         createdOn: new Date(),
-                        lastEdited: new Date(), documentationUrl:""
+                        lastEdited: new Date(),
+                        documentationUrl: "",
+                        authorId: ""
                     });
                 }
             } catch (error) {
