@@ -5,6 +5,7 @@ import {
 } from "firebase/auth";
 import {auth} from "@/lib/firebase/clientApp";
 import {AppRouterInstance} from "next/dist/shared/lib/app-router-context.shared-runtime";
+import {createNewUser} from "@/actions/userActions";
 
 
 
@@ -16,7 +17,9 @@ export async function signInWithGoogle(router: AppRouterInstance) {
     const provider = new GoogleAuthProvider();
 
     try {
-        await signInWithPopup(auth, provider);
+        const result = await signInWithPopup(auth, provider);
+        const user = result.user
+        await createNewUser({id: user.uid, email: user.email || "", displayName: user.displayName || "", photoUrl:user.photoURL || "", learnedExercises:[]})
         router.push("/")
     } catch (error) {
         console.error("Error signing in with Google", error);

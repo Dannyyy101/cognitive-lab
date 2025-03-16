@@ -4,16 +4,10 @@ export interface SubjectDTO {
     id: string;
     name: string;
     color: string;
+    bgColor: string;
     exercises: ExerciseBaseDTO[];
-    parent: SubjectDTO
+    parent: SubjectDTO | null
     children: SubjectDTO[]
     lastEdited: Date
     createdOn: Date
-}
-
-export interface SubjectWithExercisesDTO {
-    id: string;
-    name: string;
-    color: string;
-    exercises: ExerciseBaseDTO[];
 }

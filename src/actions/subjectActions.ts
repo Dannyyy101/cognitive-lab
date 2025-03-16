@@ -1,101 +1,136 @@
-'use server'
+"use server";
 
-import {SubjectDTO} from "@/types/dtos/subjectDTO";
-import {BACKEND_URL} from "@/utils/constants";
+import { SubjectDTO } from "@/types/dtos/subjectDTO";
+import { BACKEND_URL } from "@/utils/constants";
+import {
+  collection,
+  doc,
+  DocumentReference,
+  getDoc,
+  getDocs,
+  query,
+  setDoc,
+  where,
+} from "firebase/firestore";
+import { db } from "@/lib/firebase/clientApp";
+import { subjectWithExercisesConverter } from "@/lib/converter/subjectWithExercisesConverter";
+import { subjectConverter } from "@/lib/converter/subjectConverter";
+import { createNewExercises } from "./exerciseActions";
+
+const COLLECTION = "subjects";
 
 export const createNewSubject = async (subject: SubjectDTO) => {
-    try {
-        const result = await fetch(`${BACKEND_URL}/subjects`, {
-            method: "POST",
-            headers: {
-                'Content-Type': 'application/json',
-            }, body: JSON.stringify(subject)
-        });
-        const id = await result.json()
-        await fetch(`${BACKEND_URL}/subjects/${subject.parent.id}/children/${id}`, {
-            method: "POST"
-        });
-        if (!result.ok) {
-            throw new Error('Failed to create subject');
-        }
-        return id
-    } catch (error) {
-        console.error('Fetch error:', error);
-        return null;
-    }
-}
+  const exercises = await createNewExercises(subject.exercises);
+
+  const ref = doc(collection(db, COLLECTION)).withConverter(subjectConverter);
+  await setDoc(ref, { ...subject, exercises: exercises } as SubjectDTO);
+  return ref.id;
+};
 
 export const getAllSubjects = async () => {
-    try {
-        const result = await fetch(`${BACKEND_URL}/subjects`);
-        if (!result.ok) {
-            throw new Error('Failed to fetch data');
-        }
-        return await result.json() as SubjectDTO[]
-    } catch (error) {
-        console.error('Fetch error:', error);
-        return null;
-    }
-}
+  const col = collection(db, COLLECTION);
+  const q = query(col, where("parent", "==", null));
+
+  const querySnapshot = await getDocs(q);
+
+  const postsList = querySnapshot.docs.map(async (doc) => {
+    const data = doc.data();
+    const exercises = await Promise.all(
+      data.exercises.map(async (exerciseRef: DocumentReference) => {
+        const exerciseDoc = await getDoc(exerciseRef);
+        return exerciseDoc.exists()
+          ? { ...exerciseDoc.data(), id: exerciseDoc.id }
+          : null;
+      }),
+    );
+    const children = await Promise.all(
+      data.children.map(async (childrenRef: DocumentReference) => {
+        const childrenDoc = await getDoc(childrenRef);
+        return childrenDoc.exists()
+          ? { id: childrenDoc.id, ...childrenDoc.data() }
+          : null;
+      }),
+    );
+    return {
+      id: doc.id,
+      ...data,
+      exercises: exercises.filter((exercise) => exercise !== null),
+      children: children.filter((child) => child !== null),
+    };
+  });
+
+  return (await Promise.all(postsList)) as SubjectDTO[];
+};
 
 export const getSubjectById = async (subjectId: string) => {
-    try {
-        const result = await fetch(`${BACKEND_URL}/subjects/${subjectId}`);
-        if (!result.ok) {
-            throw new Error('Failed to fetch data');
-        }
-        return await result.json() as SubjectDTO
-    } catch (error) {
-        console.error('Fetch error:', error);
-        return null;
+  try {
+    const result = await fetch(`${BACKEND_URL}/subjects/${subjectId}`);
+    if (!result.ok) {
+      throw new Error("Failed to fetch data");
     }
-}
+    return (await result.json()) as SubjectDTO;
+  } catch (error) {
+    console.error("Fetch error:", error);
+    return null;
+  }
+};
 
-export const updateSubjectById = async (subjectId: string) => {
-    try {
-        const result = await fetch(`http://127.0.0.1:8000/api/subjects/${subjectId}`, {method: "PUT"});
-        if (!result.ok) {
-            throw new Error('Failed to fetch data');
-        }
-        return await result.json() as SubjectDTO
-    } catch (error) {
-        console.error('Fetch error:', error);
-        return null;
-    }
-}
+export const updateSubjectById = async (
+  subjectId: string,
+  subject: SubjectDTO,
+) => {
+  const subjectCollection = doc(db, COLLECTION, subjectId).withConverter(
+    subjectWithExercisesConverter,
+  );
+  await setDoc(subjectCollection, subject, { merge: true });
+};
 
-export const addExercisesToSubject = async (subjectId: string, exerciseId: string) => {
-    try {
-        const result = await fetch(`${BACKEND_URL}/subjects/${subjectId}/exercises/${exerciseId}`, {method: "POST"});
-        if (!result.ok) {
-            throw new Error('Failed to fetch data');
-        }
-    } catch (error) {
-        console.error('Fetch error:', error);
-        return null;
+export const addExercisesToSubject = async (
+  subjectId: string,
+  exerciseId: string,
+) => {
+  try {
+    const result = await fetch(
+      `${BACKEND_URL}/subjects/${subjectId}/exercises/${exerciseId}`,
+      { method: "POST" },
+    );
+    if (!result.ok) {
+      throw new Error("Failed to fetch data");
     }
-}
+  } catch (error) {
+    console.error("Fetch error:", error);
+    return null;
+  }
+};
 
-export const removeExercisesFromSubject = async (subjectId: string, exerciseId: string) => {
-    try {
-        const result = await fetch(`${BACKEND_URL}/subjects/${subjectId}/exercises/${exerciseId}`, {method: "DELETE"});
-        if (!result.ok) {
-            throw new Error('Failed to fetch data');
-        }
-    } catch (error) {
-        console.error('Fetch error:', error);
-        return null;
+export const removeExercisesFromSubject = async (
+  subjectId: string,
+  exerciseId: string,
+) => {
+  try {
+    const result = await fetch(
+      `${BACKEND_URL}/subjects/${subjectId}/exercises/${exerciseId}`,
+      { method: "DELETE" },
+    );
+    if (!result.ok) {
+      throw new Error("Failed to fetch data");
     }
-}
+  } catch (error) {
+    console.error("Fetch error:", error);
+    return null;
+  }
+};
 
-export const deleteSubject =async  (subjectId:string) =>{
-    try {
-        const result = await fetch(`${BACKEND_URL}/subjects/${subjectId}`, {method: "DELETE"});
-        if (!result.ok) {
-            throw new Error('Failed to fetch data');
-        }
-    } catch (error) {
-        console.error('Fetch error:', error);
-        return null;
+export const deleteSubject = async (subjectId: string) => {
+  try {
+    const result = await fetch(`${BACKEND_URL}/subjects/${subjectId}`, {
+      method: "DELETE",
+    });
+    if (!result.ok) {
+      throw new Error("Failed to fetch data");
     }
-}
+  } catch (error) {
+    console.error("Fetch error:", error);
+    return null;
+  }
+};

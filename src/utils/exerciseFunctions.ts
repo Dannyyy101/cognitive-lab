@@ -1,18 +1,20 @@
-import {CombinedExerciseDTO, ExerciseType} from "@/types/dtos/exerciseDTO";
+import { ExerciseBaseDTO, ExerciseTyp } from "@/types/dtos/exerciseDTO";
 
-export const filterExerciseFields = (exercise: CombinedExerciseDTO) => {
-    if (exercise.type === 'normal') {
-        const {type, createdOn, lastEdited, lastLearned, question, answer} = exercise;
-        return {type, createdOn, lastEdited, lastLearned, question, answer};
-    }
-    return null;
+export const getDefaultExerciseByType = (
+  type: ExerciseTyp,
+): ExerciseBaseDTO => {
+  switch (type) {
+    case "text":
+      return {
+        id: "",
+        lastEdited: new Date(),
+        authorId: "",
+        createdOn: new Date(),
+        documentationUrl: "",
+        answer: [{ type: "text", content: "" }],
+        question: [{ type: "text", content: "" }],
+      } as ExerciseBaseDTO;
+    default:
+      return getDefaultExerciseByType("text");
+  }
 };
-
-export const convertExerciseTypeIntoLabel = (type: ExerciseType) => {
-    switch (type) {
-        case "normal":
-            return "Normal"
-        case "multiple-choice":
-            return "Multiple Choice"
-    }
-}

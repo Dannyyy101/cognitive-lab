@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { deleteDoc, doc, DocumentReference, getDoc } from "firebase/firestore";
 import { subjectWithExercisesConverter } from "@/lib/converter/subjectWithExercisesConverter";
 import { BACKEND_URL } from "@/utils/constants";
-import {db} from "@/lib/firebase/clientApp";
+import { db } from "@/lib/firebase/clientApp";
 
 const COLLECTION = "subjects";
 
@@ -48,7 +48,7 @@ export async function GET(request: NextRequest) {
       data.exercises.map(async (exerciseRef: DocumentReference) => {
         const exerciseDoc = await getDoc(exerciseRef);
         return exerciseDoc.exists()
-          ? { ...exerciseDoc.data(), id: exerciseDoc.id, lastLearned: new Date(exerciseDoc.data().lastLearned.seconds * 1000) }
+          ? { ...exerciseDoc.data(), id: exerciseDoc.id }
           : null;
       }),
     );
@@ -66,7 +66,7 @@ export async function GET(request: NextRequest) {
     if (data.parent) {
       const childrenDoc = await getDoc(data.parent);
       parent = childrenDoc.exists()
-        ? { id: childrenDoc.id, ...childrenDoc.data() }
+        ? { id: childrenDoc.id, ...(childrenDoc.data() || {}) }
         : null;
     }
 
@@ -76,7 +76,7 @@ export async function GET(request: NextRequest) {
       id: postsSnapshot.id,
       exercises: exercises.filter((exercise) => exercise !== null),
       children: children.filter((children) => children !== null),
-      parent: parent
+      parent: parent,
     });
   } catch (error) {
     console.error("Error fetching documents: ", error);

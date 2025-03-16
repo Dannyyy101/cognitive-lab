@@ -1,11 +1,11 @@
 import { getSubjectById } from "@/actions/subjectActions";
 import { Loading } from "@/components/Loading";
 import React, { createContext, useContext, useEffect, useState } from "react";
-import {SubjectDTO} from "@/types/dtos/subjectDTO";
+import { SubjectDTO } from "@/types/dtos/subjectDTO";
 
 interface SubjectProviderProps {
   children: React.ReactNode;
-  subjectId: string;
+  subjectId?: string;
 }
 
 interface SubjectContextType {
@@ -22,16 +22,25 @@ export const SubjectProvider: React.FC<SubjectProviderProps> = ({
   const [subject, setSubject] = useState<SubjectDTO | null>(null);
 
   useEffect(() => {
-    const fetchSubject = async () => {
+    if (subjectId) {
       try {
-        const result = await getSubjectById(subjectId);
-        setSubject(result);
+        getSubjectById(subjectId).then((result) => setSubject(result));
       } catch (error) {
         console.error("Failed to fetch subject:", error);
       }
-    };
-
-    fetchSubject();
+    } else {
+      setSubject({
+        id: "",
+        parent: null,
+        name: "",
+        exercises: [],
+        children: [],
+        lastEdited: new Date(),
+        color: "",
+        bgColor: "",
+        createdOn: new Date(),
+      });
+    }
   }, [subjectId]);
 
   if (!subject) return <Loading />;
@@ -46,7 +55,7 @@ export const SubjectProvider: React.FC<SubjectProviderProps> = ({
 export const useSubject = () => {
   const context = useContext(SubjectContext);
   if (context === undefined) {
-    throw new Error("useAuth must be used within an AuthProvider");
+    throw new Error("useSubject must be used within an SubjectProvider");
   }
   return context;
 };
