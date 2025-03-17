@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { deleteDoc, doc, DocumentReference, getDoc } from "firebase/firestore";
+import { doc, DocumentReference, getDoc } from "firebase/firestore";
 import { subjectWithExercisesConverter } from "@/lib/converter/subjectWithExercisesConverter";
-import { BACKEND_URL } from "@/utils/constants";
 import { db } from "@/lib/firebase/clientApp";
 
 const COLLECTION = "subjects";
@@ -85,34 +84,4 @@ export async function GET(request: NextRequest) {
       { status: 500 },
     );
   }
-}
-
-export async function DELETE(request: NextRequest) {
-  const subjectId = request.nextUrl.pathname.split("/").pop();
-
-  if (!subjectId) {
-    return NextResponse.json(
-      { error: "Invalid request param provided" },
-      { status: 404 },
-    );
-  }
-
-  const ref = doc(db, COLLECTION, subjectId).withConverter(
-    subjectWithExercisesConverter,
-  );
-  const document = await getDoc(ref);
-  if (document.exists()) {
-    const data = document.data();
-    console.log(data?.parent.id);
-    if (data?.parent) {
-      await fetch(
-        `${BACKEND_URL}/subjects/${data.parent.id}/children/${subjectId}`,
-        {
-          method: "DELETE",
-        },
-      );
-    }
-    await deleteDoc(ref);
-  }
-  return NextResponse.json({});
 }
