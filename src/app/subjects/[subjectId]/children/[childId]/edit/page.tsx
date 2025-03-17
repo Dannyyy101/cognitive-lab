@@ -1,49 +1,72 @@
 "use client";
-import { useRouter, useSearchParams } from "next/navigation";
 import React, { useState } from "react";
-import { SubjectProvider, useSubject } from "@/context/SubjectProvider";
+import { useSubject } from "@/context/SubjectProvider";
 import { getDefaultExerciseByType } from "@/utils/exerciseFunctions";
-import { EditExerciseView } from "./EditExerciseView";
+import { EditExerciseView } from "@/app/subjects/create/EditExerciseView";
 import { ExerciseExplorer } from "@/app/subjects/create/ExerciseExplorer";
-import { ExerciseTyp } from "@/types/dtos/exerciseDTO";
+import { ExerciseBaseDTO, ExerciseTyp } from "@/types/dtos/exerciseDTO";
 import {
-  createNewSubject,
-  getSubjectById,
+  removeExercisesFromSubject,
   updateSubjectById,
 } from "@/actions/subjectActions";
+import deepEqual from "deep-equal";
+import {
+  createNewExercise,
+  updateExerciseById,
+} from "@/actions/exerciseActions";
 
-interface CreateSubjectViewProps {
-  redirectUrl: string | null;
-  parentId: string | null;
-}
-
-const CreateSubjectView = ({
-  redirectUrl,
-  parentId,
-}: CreateSubjectViewProps) => {
+const CreateSubjectView = () => {
   const difficulties = ["Very Easy", "Easy", "Medium", "Hard", "Really Hard"];
   const exerciseVariants: ExerciseTyp[] = ["text", "multiple-choice", "image"];
   const [newExerciseType, setNewExerciseType] = useState<ExerciseTyp>("text");
   const [newExerciseIndex, setNewExerciseIndex] = useState<number>(0);
-  const router = useRouter();
 
   const { subject, setSubject } = useSubject();
+  const [oldSubject, _setOldSubject] = useState(subject);
 
-  const handleCreateNewSubject = async () => {
-    let parent = null;
-    if (parentId) parent = await getSubjectById(parentId);
+  const handleUpdateSubject = async () => {
+    const elementsToUpdate: ExerciseBaseDTO[] = [];
 
-    const id = await createNewSubject({ ...subject, parent: parent });
+    await Promise.all(
+      subject.exercises.map(async (newExercise) => {
+        const index = oldSubject.exercises.findIndex(
+          (e) => e.id === newExercise.id,
+        );
 
-    if (parent) {
-      const newParent = {
-        ...parent,
-        children: [...parent.children, { ...subject, id: id }],
-      };
-      await updateSubjectById(parent.id, newParent);
-    }
-    if (redirectUrl) router.push(redirectUrl);
+        if (index !== -1) {
+          const oldExercise = oldSubject.exercises[index];
+          const equal = deepEqual(newExercise, oldExercise);
+          console.log(equal);
+          if (!equal) {
+            await updateExerciseById(newExercise.id, newExercise);
+          }
+          elementsToUpdate.push(newExercise);
+        } else {
+          const savedExercise = await createNewExercise(newExercise);
+          console.log("Saved Exercise:", savedExercise);
+          elementsToUpdate.push(savedExercise);
+        }
+      }),
+    );
+
+    await Promise.all(
+      oldSubject.exercises.map(async (oldExercise) => {
+        const index = subject.exercises.findIndex(
+          (e) => e.id === oldExercise.id,
+        );
+        if (index === -1) {
+          console.log(oldSubject);
+          await removeExercisesFromSubject(subject.id, oldExercise.id);
+        }
+      }),
+    );
+
+    await updateSubjectById(subject.id, {
+      ...subject,
+      exercises: elementsToUpdate,
+    });
   };
+
   const handleAddExercise = () => {
     setSubject({
       ...subject,
@@ -57,7 +80,7 @@ const CreateSubjectView = ({
   return (
     <main className="w-screen mt-32 flex justify-center items-center flex-col h-fit">
       <section className="w-10/12">
-        <h1 className="text-3xl font-bold">Erstelle eine neue Aufgabe</h1>
+        <h1 className="text-3xl font-bold">Editiere eine Aufgabe</h1>
         <p className="text-fgColor_disabled text-sm">
           Entwerfen Sie Fragen und stellen Sie Ihre Übung zusammen
         </p>
@@ -65,10 +88,10 @@ const CreateSubjectView = ({
 
       <section className="relative w-10/12 rounded-md border-borderColor_default border p-4 mt-4 flex flex-col">
         <button
-          onClick={handleCreateNewSubject}
+          onClick={handleUpdateSubject}
           className="absolute right-4 w-48 h-10 rounded-md bg-bgColor_inverse text-fgColor_onEmphasis font-semibold"
         >
-          Subject erstellen
+          Subject updaten
         </button>
         <h2 className="text-2xl font-bold">Subject Details</h2>
         <p className="text-fgColor_disabled text-sm">
@@ -120,14 +143,5 @@ const CreateSubjectView = ({
 };
 
 export default function Page() {
-  const searchParams = useSearchParams();
-  const redirectUrl = searchParams.get("redirectUrl");
-  const subjectId = searchParams.get("subjectId");
-  const parentId = searchParams.get("parentId");
-
-  return (
-    <SubjectProvider subjectId={subjectId || undefined}>
-      <CreateSubjectView redirectUrl={redirectUrl} parentId={parentId} />
-    </SubjectProvider>
-  );
+  return <CreateSubjectView />;
 }

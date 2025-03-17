@@ -1,25 +1,15 @@
-'use server'
-import { BACKEND_URL } from "@/utils/constants";
+"use server";
+
+import { supabase } from "@/lib/supabase/client";
+import { sanitizeFileName } from "@/utils/sanatizeFilename";
 
 export const uploadFile = async (file: File) => {
-    try {
-        const formData = new FormData();
-        formData.append('file', file);
+  const arrayBuffer = await file.arrayBuffer();
+  const buffer = new Uint8Array(arrayBuffer);
+  console.log(encodeURI(file.name));
+  const { data, error } = await supabase.storage
+    .from("docs")
+    .upload(sanitizeFileName(file.name), buffer);
 
-        const result = await fetch(`${BACKEND_URL}/images`, {
-            method: "POST",
-            body: formData,
-        });
-
-        if (!result.ok) {
-            const errorResponse = await result.json();
-            throw new Error(errorResponse.error || 'Failed to upload file');
-        }
-
-        return await result.json();
-
-    } catch (error) {
-        console.error('Upload error:', error);
-        return null;
-    }
+  return { data, error };
 };

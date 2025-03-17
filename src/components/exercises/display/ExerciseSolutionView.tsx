@@ -9,11 +9,10 @@ export const ExerciseSolutionView = ({
   answer: string;
   type: "wrong" | "correct" | "solution";
 }) => {
-  console.log(answer);
   switch (type) {
     case "solution":
       return (
-        <div className=" max-h-36 overflow-y-auto p-2 w-full flex flex-col bg-bgColor_attention_muted border border-borderColor_attention_emphasis rounded-md">
+        <div className="max-h-36 overflow-y-auto p-2 w-full flex flex-col bg-bgColor_attention_muted border border-borderColor_attention_emphasis rounded-md">
           <h3 className="text-xl font-semibold text-fgColor_attention">
             Korrekt
           </h3>

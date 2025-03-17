@@ -1,8 +1,17 @@
+import { uploadFile } from "@/actions/fileActions";
+import { ExerciseFileUpload } from "@/components/exercises/display/ExerciseFileUpload";
 import { ExerciseTextArea } from "@/components/exercises/display/ExerciseTextArea";
 import { useSubject } from "@/context/SubjectProvider";
-import { ExerciseTextComponent } from "@/types/dtos/exerciseDTO";
+import {
+  ExerciseImageComponent,
+  ExerciseTextComponent,
+} from "@/types/dtos/exerciseDTO";
+import { IMAGE_URL } from "@/utils/constants";
+import Image from "next/image";
+import { ChangeEvent, useState } from "react";
 
 export const EditExerciseView = ({ index }: { index: number }) => {
+  const [_image, setImage] = useState<File | null>(null);
   const { subject, setSubject } = useSubject();
 
   if (!subject.exercises || subject.exercises.length === 0) return null;
@@ -33,6 +42,21 @@ export const EditExerciseView = ({ index }: { index: number }) => {
     setSubject({ ...subject, exercises: updatedExercises });
   };
 
+  const handleFileChange = async (event: ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      const { data, error: _error } = await uploadFile(file);
+      if (data) {
+        const updatedExercises = [...subject.exercises];
+        (
+          updatedExercises[index].question[0] as ExerciseImageComponent
+        ).imageUrl = IMAGE_URL + data.fullPath;
+        setSubject({ ...subject, exercises: updatedExercises });
+        setImage(file);
+      }
+    }
+  };
+
   let questionComponent = null;
   let answerComponent = null;
 
@@ -48,6 +72,25 @@ export const EditExerciseView = ({ index }: { index: number }) => {
             }
             placeholder="Gib hier deine Frage ein"
           />
+        </>
+      );
+      break;
+    case "image":
+      questionComponent = (
+        <>
+          <label className="mt-2">Frage</label>
+          <ExerciseFileUpload
+            onChange={(e) => handleFileChange(e)}
+            placeholder="Gib hier deine Frage ein"
+          />
+          {(exercise.question[0] as ExerciseImageComponent).imageUrl && (
+            <Image
+              src={(exercise.question[0] as ExerciseImageComponent).imageUrl}
+              alt="uploaded-image"
+              width={64}
+              height={64}
+            />
+          )}
         </>
       );
       break;

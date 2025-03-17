@@ -4,6 +4,7 @@ import { BACKEND_URL } from "@/utils/constants";
 import { collection, doc, setDoc } from "firebase/firestore";
 import { db } from "@/lib/firebase/clientApp";
 import { ExerciseBaseDTO } from "@/types/dtos/exerciseDTO";
+import { exerciseConverter } from "@/lib/converter/exerciseConverter";
 
 const COLLECTION = "exercises";
 
@@ -49,4 +50,14 @@ export const deleteExerciseById = async (exerciseId: string) => {
     console.error("Fetch error:", error);
     return null;
   }
+};
+
+export const updateExerciseById = async (
+  exerciseId: string,
+  exercise: ExerciseBaseDTO,
+) => {
+  const exerciseCollection = doc(db, COLLECTION, exerciseId).withConverter(
+    exerciseConverter,
+  );
+  await setDoc(exerciseCollection, exercise, { merge: true });
 };

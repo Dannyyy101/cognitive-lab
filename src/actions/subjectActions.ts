@@ -16,6 +16,9 @@ import { db } from "@/lib/firebase/clientApp";
 import { subjectWithExercisesConverter } from "@/lib/converter/subjectWithExercisesConverter";
 import { subjectConverter } from "@/lib/converter/subjectConverter";
 import { createNewExercises } from "./exerciseActions";
+import { updateDoc } from "firebase/firestore";
+import { arrayRemove } from "firebase/firestore";
+import { deleteDoc } from "firebase/firestore";
 
 const COLLECTION = "subjects";
 
@@ -121,16 +124,26 @@ export const removeExercisesFromSubject = async (
   }
 };
 
-export const deleteSubject = async (subjectId: string) => {
-  try {
-    const result = await fetch(`${BACKEND_URL}/subjects/${subjectId}`, {
-      method: "DELETE",
-    });
-    if (!result.ok) {
-      throw new Error("Failed to fetch data");
+export const removeChildFromSubject = async (
+  parentId: string,
+  subjectId: string,
+) => {
+  const washingtonRef = doc(db, COLLECTION, parentId);
+  const docu = doc(db, COLLECTION, subjectId);
+  await updateDoc(washingtonRef, { children: arrayRemove(docu) });
+};
+
+export const deleteSubjectById = async (subjectId: string) => {
+  const ref = doc(db, COLLECTION, subjectId).withConverter(
+    subjectWithExercisesConverter,
+  );
+  const document = await getDoc(ref);
+  if (document.exists()) {
+    const data = document.data();
+
+    if (data?.parent) {
+      removeChildFromSubject(data.parent.id, subjectId);
     }
-  } catch (error) {
-    console.error("Fetch error:", error);
-    return null;
+    await deleteDoc(ref);
   }
 };

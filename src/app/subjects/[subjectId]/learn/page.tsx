@@ -3,16 +3,21 @@ import { ExerciseSolutionView } from "@/components/exercises/display/ExerciseSol
 import { useSubject } from "@/context/SubjectProvider";
 import {
   ExerciseBaseDTO,
+  ExerciseImageComponent,
   ExerciseTextComponent,
 } from "@/types/dtos/exerciseDTO";
 import React, { useState } from "react";
 import { Arrow } from "@/components/card/Arrow";
+import { setExerciseLearnedForUser } from "@/actions/userActions";
+import { useUserSession } from "@/hooks/useUserSession";
+import Image from "next/image";
 
 export default function Page() {
   const [exerciseIndex, setExerciseIndex] = useState<number>(0);
   const [userAnswer, setUserAnswer] = useState<string>("");
   const [showAnswer, setShowAnswer] = useState<boolean>(false);
   const { subject } = useSubject();
+  const user = useUserSession(null);
 
   if (subject.exercises.length === 0) {
     return <p className="mt-32 text-black">This subject has no exercises</p>;
@@ -26,6 +31,14 @@ export default function Page() {
   };
 
   const handleNextExercise = () => {
+    setExerciseLearnedForUser(user?.uid || "", {
+      subjectId: subject.id,
+      exerciseId: subject.exercises[exerciseIndex].id,
+      lastLearned: new Date(),
+      correct:
+        (subject.exercises[exerciseIndex].answer[0] as ExerciseTextComponent)
+          .content === userAnswer,
+    });
     setExerciseIndex((prev) =>
       prev < subject.exercises.length - 1
         ? prev + 1
@@ -53,7 +66,7 @@ export default function Page() {
         className="absolute top-1/2 right-4"
         direction={"right"}
       />
-      <section className="w-2/3 h-96 flex border-l-4 border-l-bgColor_accent_emphasis border border-borderColor_default rounded-md flex-col relative">
+      <section className="w-2/3 flex border-l-4 border-l-bgColor_accent_emphasis border border-borderColor_default rounded-md flex-col relative">
         <div className="w-full p-4">
           <ExerciseLearnCard
             exercise={subject.exercises[exerciseIndex]}
@@ -72,7 +85,7 @@ export default function Page() {
             />
           )}
         </div>
-        <div className="absolute bottom-0 h-20 w-full border-t border-t-borderColor_default mt-2 p-4">
+        <div className="min-h-20 relative w-full border-t border-t-borderColor_default mt-2 p-4">
           <button
             onClick={() => setShowAnswer((prev) => !prev)}
             className="absolute right-4 bottom-5 h-10 w-32 bg-bgColor_accent_emphasis rounded-md text-white"
@@ -103,6 +116,18 @@ const ExerciseLearnCard = ({
         <>
           <label>Frage</label>
           <p>{(exercise.question[0] as ExerciseTextComponent).content}</p>
+        </>
+      );
+    case "image":
+      questionComponent = (
+        <>
+          <label>Frage</label>
+          <Image
+            src={(exercise.question[0] as ExerciseImageComponent).imageUrl}
+            alt="question-image"
+            width={128}
+            height={128}
+          />
         </>
       );
   }
