@@ -15,7 +15,7 @@ export const Header = ({initialUser}: { initialUser: User | null }) => {
             </div>
             <div className="flex h-full items-center mr-5 w-1/3 justify-end">
                 {user ?
-                    <>
+                    <Link className="flex items-center" href={`/users/${user.uid}`}>
                         <p className="mr-4">
                             {user.displayName}
                         </p>
@@ -24,7 +24,7 @@ export const Header = ({initialUser}: { initialUser: User | null }) => {
                                    alt="user-photo"/>
                         }
 
-                    </>
+                    </Link>
                     : <Link href={"/auth"}>Einloggen
                     </Link>
                 }
