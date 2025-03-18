@@ -11,9 +11,9 @@ import { IsUserAdmin } from "@/components/auth/IsUserAdmin";
 export default function Page() {
   const { subject } = useSubject();
   return (
-    <main className="flex h-screen items-center mt-32 flex-col">
-      <div className="w-full flex  px-4 pb-4 pt-6 flex-col rounded-t-md">
-        <div className="flex items-center relative">
+    <main className="flex h-screen items-center mt-32 flex-col relative">
+      <div className="w-full flex px-4 pb-4 pt-6 flex-col rounded-t-md">
+        <div className="flex items-center">
           <div
             style={{ backgroundColor: subject.color }}
             className="rounded-full p-2 h-12 w-12"
@@ -32,12 +32,12 @@ export default function Page() {
           <IsUserAdmin>
             <Link
               href={`./${subject.id}/edit`}
-              className="flex justify-center items-center absolute right-40 w-32 h-10 rounded-md border border-borderColor_default font-semibold"
+              className="flex justify-center items-center absolute right-40 w-32 h-10 rounded-md border border-borderColor_default font-semibold -top-6 md:top-0"
             >
               Bearbeiten
             </Link>
           </IsUserAdmin>
-          <button className="absolute right-4 w-32 h-10 rounded-md bg-bgColor_inverse text-fgColor_onEmphasis font-semibold">
+          <button className="absolute -top-6 md:top-0 right-4 w-32 h-10 rounded-md bg-bgColor_inverse text-fgColor_onEmphasis font-semibold">
             Alle lernen
           </button>
         </div>
