@@ -8,8 +8,8 @@ import {
 } from "@/types/dtos/exerciseDTO";
 import React, { useState } from "react";
 import { Arrow } from "@/components/card/Arrow";
-import { setExerciseLearnedForUser } from "@/actions/userActions";
-import { useUserSession } from "@/hooks/useUserSession";
+//import { setExerciseLearnedForUser } from "@/actions/userActions";
+//import { useUserSession } from "@/hooks/useUserSession";
 import Image from "next/image";
 import Link from "next/link";
 import { Text } from "@/components/text/Text";
@@ -20,7 +20,7 @@ export default function Page() {
   const [userAnswer, setUserAnswer] = useState<string>("");
   const [showAnswer, setShowAnswer] = useState<boolean>(false);
   const { subject } = useSubject();
-  const user = useUserSession(null);
+  // const user = useUserSession(null);
 
   if (subject.exercises.length === 0) {
     return <p className="mt-32 text-black">This subject has no exercises</p>;
@@ -35,7 +35,7 @@ export default function Page() {
   };
 
   const handleNextExercise = () => {
-    setExerciseLearnedForUser(user?.uid || "", {
+    /*setExerciseLearnedForUser(user?.uid || "", {
       subjectId: subject.id,
       exerciseId: subject.exercises[exerciseIndex].id,
       lastLearned: new Date(),
@@ -43,6 +43,7 @@ export default function Page() {
         (subject.exercises[exerciseIndex].answer[0] as ExerciseTextComponent)
           .content === userAnswer,
     });
+    */
     setExerciseIndex((prev) =>
       prev < subject.exercises.length - 1
         ? prev + 1
@@ -151,7 +152,7 @@ const ExerciseLearnCard = ({
           <input
             value={userAnswer}
             onChange={(e) => handleUserAnswer(e.target.value)}
-            className="w-full min-w-96 max-w-9 h-10 pl-1 border border-borderColor_default rounded-md"
+            className="w-full max-w-96 h-10 pl-1 border border-borderColor_default rounded-md"
           />
         </div>
       );
