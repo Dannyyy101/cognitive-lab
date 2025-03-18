@@ -12,6 +12,7 @@ import { setExerciseLearnedForUser } from "@/actions/userActions";
 import { useUserSession } from "@/hooks/useUserSession";
 import Image from "next/image";
 import Link from "next/link";
+import { Text } from "@/components/text/Text";
 
 export default function Page() {
   const [exerciseIndex, setExerciseIndex] = useState<number>(0);
@@ -124,9 +125,10 @@ const ExerciseLearnCard = ({
       questionComponent = (
         <>
           <label>Frage</label>
-          <p>{(exercise.question[0] as ExerciseTextComponent).content}</p>
+          <Text>{(exercise.question[0] as ExerciseTextComponent).content}</Text>
         </>
       );
+      break;
     case "image":
       questionComponent = (
         <>
