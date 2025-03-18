@@ -28,3 +28,20 @@ export const getDefaultExerciseByType = (
       return getDefaultExerciseByType("text");
   }
 };
+
+export const isAnswerCorrect = (userInput: string, answer: string) => {
+  // Regular expression to extract the text between slashes
+  const regex = /\/(.*?)\//g;
+  const matches = [];
+  let match;
+
+  while ((match = regex.exec(answer.replaceAll(" ", ""))) !== null) {
+    matches.push(match[1]); // match[1] contains the text between slashes
+  }
+  console.log(matches);
+
+  if (matches.length === 0) return userInput === answer;
+
+  // Compare extracted matches with user input
+  return matches.includes(userInput.replaceAll(" ", ""));
+};

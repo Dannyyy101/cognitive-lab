@@ -11,6 +11,7 @@ import {
   getSubjectById,
   updateSubjectById,
 } from "@/actions/subjectActions";
+import { Loading } from "@/components/Loading";
 
 interface CreateSubjectViewProps {
   redirectUrl: string | null;
@@ -25,11 +26,14 @@ const CreateSubjectView = ({
   const exerciseVariants: ExerciseTyp[] = ["text", "multiple-choice", "image"];
   const [newExerciseType, setNewExerciseType] = useState<ExerciseTyp>("text");
   const [newExerciseIndex, setNewExerciseIndex] = useState<number>(0);
+  const [loading, setLoading] = useState<boolean>(false);
+
   const router = useRouter();
 
   const { subject, setSubject } = useSubject();
 
   const handleCreateNewSubject = async () => {
+    setLoading(true);
     let parent = null;
     if (parentId) parent = await getSubjectById(parentId);
 
@@ -52,6 +56,7 @@ const CreateSubjectView = ({
         getDefaultExerciseByType(newExerciseType),
       ],
     });
+    setLoading(false);
   };
 
   return (
@@ -66,9 +71,9 @@ const CreateSubjectView = ({
       <section className="relative w-10/12 rounded-md border-borderColor_default border p-4 mt-4 flex flex-col">
         <button
           onClick={handleCreateNewSubject}
-          className="absolute right-4 w-48 h-10 rounded-md bg-bgColor_inverse text-fgColor_onEmphasis font-semibold"
+          className="flex justify-center items-center absolute right-4 w-48 h-10 rounded-md bg-bgColor_inverse text-fgColor_onEmphasis font-semibold"
         >
-          Subject erstellen
+          {loading ? <Loading /> : " Subject erstellen"}
         </button>
         <h2 className="text-2xl font-bold">Subject Details</h2>
         <p className="text-fgColor_disabled text-sm">

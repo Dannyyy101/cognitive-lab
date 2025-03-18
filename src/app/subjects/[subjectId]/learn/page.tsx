@@ -13,6 +13,7 @@ import { useUserSession } from "@/hooks/useUserSession";
 import Image from "next/image";
 import Link from "next/link";
 import { Text } from "@/components/text/Text";
+import { isAnswerCorrect as checkAnswer } from "@/utils/exerciseFunctions";
 
 export default function Page() {
   const [exerciseIndex, setExerciseIndex] = useState<number>(0);
@@ -26,9 +27,10 @@ export default function Page() {
   }
 
   const isAnswerCorrect = () => {
-    return (
+    return checkAnswer(
+      userAnswer,
       (subject.exercises[exerciseIndex].answer[0] as ExerciseTextComponent)
-        .content === userAnswer
+        .content,
     );
   };
 
@@ -68,8 +70,8 @@ export default function Page() {
         className="absolute top-1/2 right-4"
         direction={"right"}
       />
-      <section className="w-2/3 flex border-l-4 border-l-bgColor_accent_emphasis border border-borderColor_default rounded-md flex-col relative">
-        <div className="w-full p-4">
+      <section className="w-2/3 min-h-96 flex border-l-4 border-l-bgColor_accent_emphasis border border-borderColor_default rounded-md flex-col relative">
+        <div className="w-full min-h-96 p-4">
           <ExerciseLearnCard
             exercise={subject.exercises[exerciseIndex]}
             handleUserAnswer={setUserAnswer}
@@ -77,17 +79,15 @@ export default function Page() {
           />
           {showAnswer && (
             <ExerciseSolutionView
-              answer={
-                (
-                  subject.exercises[exerciseIndex]
-                    .answer[0] as ExerciseTextComponent
-                ).content
-              }
+              answer={(
+                subject.exercises[exerciseIndex]
+                  .answer[0] as ExerciseTextComponent
+              ).content.replaceAll("/", "")}
               type={isAnswerCorrect() ? "correct" : "wrong"}
             />
           )}
         </div>
-        <div className="min-h-20 relative w-full border-t border-t-borderColor_default mt-2 p-4">
+        <div className="h-20 relative w-full border-t border-t-borderColor_default mt-2 p-4">
           {subject.exercises[exerciseIndex].documentationUrl && (
             <Link
               href={subject.exercises[exerciseIndex].documentationUrl}
@@ -151,7 +151,7 @@ const ExerciseLearnCard = ({
           <input
             value={userAnswer}
             onChange={(e) => handleUserAnswer(e.target.value)}
-            className="w-96 h-10 pl-1 border border-borderColor_default rounded-md"
+            className="w-full max-w-96 h-10 pl-1 border border-borderColor_default rounded-md"
           />
         </div>
       );

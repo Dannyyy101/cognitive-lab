@@ -9,12 +9,15 @@ import plusIcon from "../../../../media/plus.svg";
 import { updateSubjectById, deleteSubjectById } from "@/actions/subjectActions";
 import Link from "next/link";
 import trashIcon from "../../../../media/trash.svg";
+import { useRouter } from "next/navigation";
 
 export default function Page() {
   const { subject, setSubject } = useSubject();
+  const router = useRouter();
 
   const handleUpdateSubject = async () => {
     await updateSubjectById(subject.id, subject);
+    router.back();
   };
 
   return (
