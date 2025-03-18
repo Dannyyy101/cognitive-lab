@@ -151,7 +151,7 @@ const ExerciseLearnCard = ({
           <input
             value={userAnswer}
             onChange={(e) => handleUserAnswer(e.target.value)}
-            className="w-full max-w-96 h-10 pl-1 border border-borderColor_default rounded-md"
+            className="w-full min-w-96 max-w-9 h-10 pl-1 border border-borderColor_default rounded-md"
           />
         </div>
       );

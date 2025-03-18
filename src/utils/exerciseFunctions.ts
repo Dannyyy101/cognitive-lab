@@ -38,7 +38,6 @@ export const isAnswerCorrect = (userInput: string, answer: string) => {
   while ((match = regex.exec(answer.replaceAll(" ", ""))) !== null) {
     matches.push(match[1]); // match[1] contains the text between slashes
   }
-  console.log(matches);
 
   if (matches.length === 0) return userInput === answer;
 
