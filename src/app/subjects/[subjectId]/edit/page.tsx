@@ -53,7 +53,7 @@ export default function Page() {
           <DisplaySubjects subject={child} key={child.id} />
         ))}
         <Link
-          href={`/subjects/create?redirectUrl${window.location.href}&subjectId=${subject.id}`}
+          href={`/subjects/create?redirectUrl${window.location.href}&parentId=${subject.id}`}
           className="m-2 p-4 rounded-md border-borderColor_default border w-80 h-40 flex justify-center items-center"
         >
           <Image src={plusIcon} alt={"plus-icon"} />

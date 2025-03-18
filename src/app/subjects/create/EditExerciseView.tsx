@@ -1,6 +1,7 @@
 import { uploadFile } from "@/actions/fileActions";
 import { ExerciseFileUpload } from "@/components/exercises/display/ExerciseFileUpload";
 import { ExerciseTextArea } from "@/components/exercises/display/ExerciseTextArea";
+import { Card, CardBottom, CardSection } from "@/components/ui/Card";
 import { useSubject } from "@/context/SubjectProvider";
 import {
   ExerciseImageComponent,
@@ -64,7 +65,7 @@ export const EditExerciseView = ({ index }: { index: number }) => {
     case "text":
       questionComponent = (
         <>
-          <label className="mt-2">Frage</label>
+          <label className="mt-2  w-full">Frage</label>
           <ExerciseTextArea
             onChange={(e) => handleChangeExerciseTextContent(e, "question")}
             value={
@@ -78,7 +79,7 @@ export const EditExerciseView = ({ index }: { index: number }) => {
     case "image":
       questionComponent = (
         <>
-          <label className="mt-2">Frage</label>
+          <label className="mt-2 w-full">Frage</label>
           <ExerciseFileUpload
             onChange={(e) => handleFileChange(e)}
             placeholder="Gib hier deine Frage ein"
@@ -100,7 +101,7 @@ export const EditExerciseView = ({ index }: { index: number }) => {
     case "text":
       answerComponent = (
         <>
-          <label className="mt-2">Antwort</label>
+          <label className="mt-2 w-full">Antwort</label>
           <ExerciseTextArea
             value={
               (exercise.answer?.at(0) as ExerciseTextComponent)?.content ?? ""
@@ -113,10 +114,26 @@ export const EditExerciseView = ({ index }: { index: number }) => {
       break;
   }
 
+  const handleChangeDocumentationUrl = (e: string) => {
+    const temp = [...subject.exercises];
+    temp[index] = { ...exercise, documentationUrl: e };
+    setSubject({ ...subject, exercises: temp });
+  };
+
   return (
-    <div className="flex flex-col ml-8">
-      {questionComponent}
-      {answerComponent}
-    </div>
+    <Card>
+      <CardSection>
+        {questionComponent}
+        {answerComponent}
+      </CardSection>
+      <CardBottom>
+        <input
+          value={exercise.documentationUrl}
+          onChange={(e) => handleChangeDocumentationUrl(e.target.value)}
+          className="pl-1 rounded-md w-40 h-10 border border-borderColor_default"
+          placeholder="Doku Link"
+        />
+      </CardBottom>
+    </Card>
   );
 };

@@ -92,11 +92,13 @@ const CreateSubjectView = ({
         <p className="text-fgColor_disabled text-sm">
           Enter the basic information about your exercise
         </p>
-        <div className="flex">
-          <ExerciseExplorer
-            handleFocusExercise={(n) => setNewExerciseIndex(n)}
-            focusedExerciseIndex={newExerciseIndex}
-          />
+        <div className="flex justify-centers w-full mt-4">
+          <div className="flex justify-centers">
+            <ExerciseExplorer
+              handleFocusExercise={(n) => setNewExerciseIndex(n)}
+              focusedExerciseIndex={newExerciseIndex}
+            />
+          </div>
           <EditExerciseView index={newExerciseIndex} />
         </div>
         <select

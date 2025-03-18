@@ -19,7 +19,7 @@ export const ExerciseExplorer = ({
   };
 
   return (
-    <div className="flex flex-col w-32 overflow-y-auto">
+    <div className="flex flex-col w-32 overflow-y-auto mx-4">
       {subject.exercises.map((_exercise, index) => (
         <div
           className={`my-1 flex items-center h-8 rounded-md ${focusedExerciseIndex === index ? "bg-black text-white" : "bg-white text-black"}`}
