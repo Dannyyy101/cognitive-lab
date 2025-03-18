@@ -14,17 +14,22 @@ import {
   createNewExercise,
   updateExerciseById,
 } from "@/actions/exerciseActions";
+import { useRouter } from "next/navigation";
+import { Loading } from "@/components/Loading";
 
 const CreateSubjectView = () => {
   const difficulties = ["Very Easy", "Easy", "Medium", "Hard", "Really Hard"];
   const exerciseVariants: ExerciseTyp[] = ["text", "multiple-choice", "image"];
   const [newExerciseType, setNewExerciseType] = useState<ExerciseTyp>("text");
   const [newExerciseIndex, setNewExerciseIndex] = useState<number>(0);
+  const [loading, setLoading] = useState<boolean>(false);
+  const router = useRouter();
 
   const { subject, setSubject } = useSubject();
   const [oldSubject, _setOldSubject] = useState(subject);
 
   const handleUpdateSubject = async () => {
+    setLoading(true);
     const elementsToUpdate: ExerciseBaseDTO[] = [];
 
     await Promise.all(
@@ -65,6 +70,8 @@ const CreateSubjectView = () => {
       ...subject,
       exercises: elementsToUpdate,
     });
+    setLoading(false);
+    router.back();
   };
 
   const handleAddExercise = () => {
@@ -89,9 +96,9 @@ const CreateSubjectView = () => {
       <section className="relative w-10/12 rounded-md border-borderColor_default border p-4 mt-4 flex flex-col">
         <button
           onClick={handleUpdateSubject}
-          className="absolute right-4 w-48 h-10 rounded-md bg-bgColor_inverse text-fgColor_onEmphasis font-semibold"
+          className="absolute right-4 w-48 h-10 rounded-md bg-bgColor_inverse text-fgColor_onEmphasis font-semibold flex justify-center items-center"
         >
-          Subject updaten
+          {loading ? <Loading /> : "Subject updaten"}
         </button>
         <h2 className="text-2xl font-bold">Subject Details</h2>
         <p className="text-fgColor_disabled text-sm">
