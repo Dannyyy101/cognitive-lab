@@ -11,6 +11,7 @@ import { Arrow } from "@/components/card/Arrow";
 import { setExerciseLearnedForUser } from "@/actions/userActions";
 import { useUserSession } from "@/hooks/useUserSession";
 import Image from "next/image";
+import Link from "next/link";
 
 export default function Page() {
   const [exerciseIndex, setExerciseIndex] = useState<number>(0);
@@ -86,6 +87,14 @@ export default function Page() {
           )}
         </div>
         <div className="min-h-20 relative w-full border-t border-t-borderColor_default mt-2 p-4">
+          {subject.exercises[exerciseIndex].documentationUrl && (
+            <Link
+              href={subject.exercises[exerciseIndex].documentationUrl}
+              className="flex justify-center items-center absolute left-4 bottom-5 h-10 w-32 bg-bgColor_accent_emphasis rounded-md text-white"
+            >
+              Dokumentation
+            </Link>
+          )}
           <button
             onClick={() => setShowAnswer((prev) => !prev)}
             className="absolute right-4 bottom-5 h-10 w-32 bg-bgColor_accent_emphasis rounded-md text-white"
