@@ -17,6 +17,7 @@
     "@uiw/react-markdown-preview": "^5.1.3",
     "deep-equal": "^2.2.3",
     "firebase": "^11.4.0",
+    "firebase-admin": "^13.2.0",
     "katex": "^0.16.21",
     "next": "15.1.7",
     "react": "^19.0.0",

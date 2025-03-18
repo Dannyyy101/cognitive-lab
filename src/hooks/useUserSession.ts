@@ -29,6 +29,8 @@ export function useUserSession(initialUser: User | null) {
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
-
+  user?.getIdTokenResult().then((idTokenResult) => {
+    console.log("User Role:", idTokenResult.claims.role);
+  });
   return user;
 }

@@ -13,6 +13,12 @@ export const getUserById = async (userId: string): Promise<UserDTO | null> => {
     : null;
 };
 
+export const doesUserExist = async (userId: string) => {
+  const ref = doc(db, COLLECTION, userId);
+  const documentSnapshot = await getDoc(ref);
+  return documentSnapshot.exists();
+};
+
 export const createNewUser = async (user: UserDTO) => {
   const dbUser = await getUserById(user.id);
   if (dbUser) {

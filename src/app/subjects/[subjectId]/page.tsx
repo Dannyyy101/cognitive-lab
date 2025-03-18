@@ -6,6 +6,7 @@ import Image from "next/image";
 import bookIcon from "@/media/book.svg";
 import { SubjectDTO } from "@/types/dtos/subjectDTO";
 import Link from "next/link";
+import { IsUserAdmin } from "@/components/auth/IsUserAdmin";
 
 export default function Page() {
   const { subject } = useSubject();
@@ -28,12 +29,14 @@ export default function Page() {
           <h1 className="text-fgColor_default text-4xl font-bold pl-2">
             {subject.name}
           </h1>
-          <Link
-            href={`./${subject.id}/edit`}
-            className="flex justify-center items-center absolute right-40 w-32 h-10 rounded-md border border-borderColor_default font-semibold"
-          >
-            Bearbeiten
-          </Link>
+          <IsUserAdmin>
+            <Link
+              href={`./${subject.id}/edit`}
+              className="flex justify-center items-center absolute right-40 w-32 h-10 rounded-md border border-borderColor_default font-semibold"
+            >
+              Bearbeiten
+            </Link>
+          </IsUserAdmin>
           <button className="absolute right-4 w-32 h-10 rounded-md bg-bgColor_inverse text-fgColor_onEmphasis font-semibold">
             Alle lernen
           </button>
