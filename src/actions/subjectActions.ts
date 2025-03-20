@@ -74,8 +74,8 @@ export const getAllSubjects = async () => {
   });
 
   const temp = (await Promise.all(postsList)) as SubjectDTO[];
-  console.log(JSON.stringify(temp));
-  return temp;
+
+  return JSON.stringify(temp);
 };
 
 

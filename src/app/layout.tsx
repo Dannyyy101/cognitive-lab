@@ -1,10 +1,10 @@
 import type {Metadata} from "next";
 import {Geist, Geist_Mono} from "next/font/google";
 import "./globals.css";
-import {Theme} from "@/components/Theme";
 import {Header} from "@/components/header/Header";
 import React from "react";
 import {getAuthenticatedAppForUser} from "@/lib/firebase/serverApp";
+import {ThemeProvider} from "@/components/Theme";
 
 const geistSans = Geist({
     variable: "--font-geist-sans",
@@ -35,12 +35,12 @@ export default async function RootLayout({
             data-dark-theme="dark"
             className={`${geistSans.variable} ${geistMono.variable} antialiased bg-background_default`}
         >
-        <Theme>
+        <ThemeProvider>
 
                 <Header initialUser={currentUser}/>
                 {children}
 
-        </Theme>
+        </ThemeProvider>
         </body>
         </html>
     );

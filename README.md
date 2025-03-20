@@ -23,11 +23,11 @@ Cognitive Lab is a modular learning platform designed to support various types o
 To set up the project locally:
 1. Clone the repository:
    ```sh
-   git clone https://github.com/yourusername/Cognitive Lab.git
+   git clone https://github.com/Dannyyy101/cognitive-lab.git
    ```
 2. Navigate to the project directory:
    ```sh
-   cd Cognitive Lab
+   cd cognitive-lab
    ```
 3. Install dependencies:
    ```sh
