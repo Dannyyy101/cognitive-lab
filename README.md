@@ -1,6 +1,6 @@
-# Studyport
+# Cognitive Lab
 
-Studyport is a modular learning platform designed to support various types of exercises and subjects.
+Cognitive Lab is a modular learning platform designed to support various types of exercises and subjects.
 
 ## Features
 - **Subjects**: Organizes topics into hierarchical structures, each containing related exercises.
@@ -23,11 +23,11 @@ Studyport is a modular learning platform designed to support various types of ex
 To set up the project locally:
 1. Clone the repository:
    ```sh
-   git clone https://github.com/yourusername/studyport.git
+   git clone https://github.com/yourusername/Cognitive Lab.git
    ```
 2. Navigate to the project directory:
    ```sh
-   cd studyport
+   cd Cognitive Lab
    ```
 3. Install dependencies:
    ```sh
