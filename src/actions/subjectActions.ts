@@ -19,6 +19,7 @@ import { createNewExercises } from "./exerciseActions";
 import { updateDoc } from "firebase/firestore";
 import { arrayRemove } from "firebase/firestore";
 import { deleteDoc } from "firebase/firestore";
+import {ExerciseBaseDTO} from "@/types/dtos/exerciseDTO";
 
 const COLLECTION = "subjects";
 
@@ -33,27 +34,37 @@ export const createNewSubject = async (subject: SubjectDTO) => {
 export const getAllSubjects = async () => {
   const col = collection(db, COLLECTION);
   const q = query(col, where("parent", "==", null));
-
   const querySnapshot = await getDocs(q);
 
   const postsList = querySnapshot.docs.map(async (doc) => {
     const data = doc.data();
+
     const exercises = await Promise.all(
-      data.exercises.map(async (exerciseRef: DocumentReference) => {
-        const exerciseDoc = await getDoc(exerciseRef);
-        return exerciseDoc.exists()
-          ? { ...exerciseDoc.data(), id: exerciseDoc.id }
-          : null;
-      }),
+        (data.exercises || []).map(async (exerciseRef: DocumentReference) => {
+          const exerciseDoc = await getDoc(exerciseRef);
+          return exerciseDoc.exists()
+              ? { ...exerciseDoc.data(), id: exerciseDoc.id }
+              : null;
+        })
     );
+
+    // Schutz gegen endlose Rekursion
     const children = await Promise.all(
-      data.children.map(async (childrenRef: DocumentReference) => {
-        const childrenDoc = await getDoc(childrenRef);
-        return childrenDoc.exists()
-          ? { id: childrenDoc.id, ...childrenDoc.data() }
-          : null;
-      }),
+        (data.children || []).map(async (childrenRef: DocumentReference) => {
+          const childrenDoc = await getDoc(childrenRef);
+          if (!childrenDoc.exists()) return null;
+
+          const childrenDocData = childrenDoc.data();
+          return {
+            id: childrenDoc.id,
+            ...childrenDocData,
+            parent:null,
+            exercises: (childrenDocData.exercises || []).map((e:ExerciseBaseDTO) => e.id),
+            children: [], // Verhindert unendliche Rekursion
+          };
+        })
     );
+
     return {
       id: doc.id,
       ...data,
@@ -62,8 +73,11 @@ export const getAllSubjects = async () => {
     };
   });
 
-  return (await Promise.all(postsList)) as SubjectDTO[];
+  const temp = (await Promise.all(postsList)) as SubjectDTO[];
+  console.log(JSON.stringify(temp));
+  return temp;
 };
+
 
 export const getSubjectById = async (subjectId: string) => {
   try {

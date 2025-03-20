@@ -1,14 +1,20 @@
+"use client";
 import { getAllSubjects } from "@/actions/subjectActions";
 import { Loading } from "@/components/Loading";
 import { SubjectDTO } from "@/types/dtos/subjectDTO";
 import Link from "next/link";
-import React, { ReactNode } from "react";
+import React, { useEffect, useState } from "react";
 import bookIcon from "../media/book.svg";
 import Image from "next/image";
 import { ProgressBar } from "@/components/ui/ProgressBar";
+import { getRatingForParent } from "@/utils/userExerciseRating";
 
-export default async function Page(): Promise<ReactNode> {
-  const subjects = await getAllSubjects();
+export default function Page() {
+  const [subjects, setSubject] = useState<SubjectDTO[]>([]);
+
+  useEffect(() => {
+    getAllSubjects().then((e) => setSubject(e));
+  }, []);
 
   if (!subjects) {
     return <Loading />;
@@ -29,7 +35,8 @@ interface SubjectDisplayProps {
 }
 
 const SubjectView: React.FC<SubjectDisplayProps> = ({ subject }) => {
-  const completed = 50;
+  const numberOfExercises = subject.children.reduce((sum, e) => sum + e.exercises.length, 0)
+
   return (
     <Link
       href={`/subjects/${subject.id}`}
@@ -59,12 +66,15 @@ const SubjectView: React.FC<SubjectDisplayProps> = ({ subject }) => {
       </div>
       <div className="w-full mt-4 px-4">
         <div className="w-full flex">
-          <p className="text-sm w-1/2">{subject.exercises.length} Aufgaben</p>
+          <p className="text-sm w-1/2">{numberOfExercises} Aufgaben</p>
           <p className="text-sm w-1/2 text-right">
             {subject.children.length} Unter-Themen
           </p>
         </div>
-        <ProgressBar progress={completed} color={subject.color} />
+        <ProgressBar
+          progress={getRatingForParent(subject.id, numberOfExercises)}
+          color={subject.color}
+        />
         <p className="w-full text-right text-sm text-fgColor_disabled mt-1">
           45% erledigt
         </p>

@@ -14,6 +14,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Text } from "@/components/text/Text";
 import { isAnswerCorrect as checkAnswer } from "@/utils/exerciseFunctions";
+import { addRatingToExercise } from "@/utils/addRatingToExercise";
 
 export default function Page() {
   const [exerciseIndex, setExerciseIndex] = useState<number>(0);
@@ -35,15 +36,6 @@ export default function Page() {
   };
 
   const handleNextExercise = () => {
-    /*setExerciseLearnedForUser(user?.uid || "", {
-      subjectId: subject.id,
-      exerciseId: subject.exercises[exerciseIndex].id,
-      lastLearned: new Date(),
-      correct:
-        (subject.exercises[exerciseIndex].answer[0] as ExerciseTextComponent)
-          .content === userAnswer,
-    });
-    */
     setExerciseIndex((prev) =>
       prev < subject.exercises.length - 1
         ? prev + 1
@@ -98,7 +90,21 @@ export default function Page() {
             </Link>
           )}
           <button
-            onClick={() => setShowAnswer((prev) => !prev)}
+            onClick={() => {
+              setShowAnswer((prev) => !prev);
+              addRatingToExercise(
+                subject.parent ? subject.parent.id : "",
+                subject.id,
+                subject.exercises[exerciseIndex],
+                checkAnswer(
+                  userAnswer,
+                  (
+                    subject.exercises[exerciseIndex]
+                      .answer[0] as ExerciseTextComponent
+                  ).content,
+                ),
+              );
+            }}
             className="absolute right-4 bottom-5 h-10 w-32 bg-bgColor_accent_emphasis rounded-md text-white"
           >
             Check Answer
