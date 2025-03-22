@@ -33,7 +33,7 @@ export default async function RootLayout({
             data-color-mode="light"
             data-light-theme="light"
             data-dark-theme="dark"
-            className={`${geistSans.variable} ${geistMono.variable} antialiased bg-background_default`}
+            className={`${geistSans.variable} ${geistMono.variable} antialiased bg-bgColor_default`}
         >
         <ThemeProvider>
 
