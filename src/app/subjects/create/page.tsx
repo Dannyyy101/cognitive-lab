@@ -12,6 +12,7 @@ import {
   updateSubjectById,
 } from "@/actions/subjectActions";
 import { Loading } from "@/components/Loading";
+import {IsUserAdmin} from "@/components/auth/IsUserAdmin";
 
 interface CreateSubjectViewProps {
   redirectUrl: string | null;
@@ -61,6 +62,7 @@ const CreateSubjectView = ({
 
   return (
     <main className="w-screen mt-32 flex justify-center items-center flex-col h-fit">
+      <IsUserAdmin>
       <section className="w-10/12">
         <h1 className="text-3xl font-bold">Erstelle eine neue Aufgabe</h1>
         <p className="text-fgColor_disabled text-sm">
@@ -122,6 +124,7 @@ const CreateSubjectView = ({
           Aufgabe hinzufügen
         </button>
       </section>
+      </IsUserAdmin>
     </main>
   );
 };

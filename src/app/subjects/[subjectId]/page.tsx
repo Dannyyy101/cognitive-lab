@@ -32,12 +32,12 @@ export default function Page() {
           <IsUserAdmin>
             <Link
               href={`./${subject.id}/edit`}
-              className="flex justify-center items-center absolute right-40 w-32 h-10 rounded-md border border-borderColor_default font-semibold -top-6 md:top-0"
+              className="text-fgColor_default flex justify-center items-center absolute right-40 w-32 h-10 rounded-md border border-borderColor_default font-semibold -top-6 md:top-0"
             >
               Bearbeiten
             </Link>
           </IsUserAdmin>
-          <button className="absolute -top-6 md:top-0 right-4 w-32 h-10 rounded-md bg-bgColor_inverse text-fgColor_onEmphasis font-semibold">
+          <button className="absolute -top-6 md:top-0 right-4 w-32 h-10 rounded-md bg-bgColor_inverse text-bgColor_default font-semibold">
             Alle lernen
           </button>
         </div>
@@ -64,7 +64,7 @@ const DisplaySubjects = ({ subject }: { subject: SubjectDTO }) => {
       </p>
       <Link
         href={`/subjects/${subject.id}/learn`}
-        className="flex justify-center items-center absolute bottom-4 right-4 w-32 h-10 rounded-md bg-bgColor_inverse text-fgColor_onEmphasis font-semibold"
+        className="text-bgColor_default flex justify-center items-center absolute bottom-4 right-4 w-32 h-10 rounded-md bg-bgColor_inverse font-semibold"
       >
         Lernen
       </Link>

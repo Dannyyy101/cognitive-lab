@@ -9,10 +9,13 @@ import Image from "next/image";
 import {ProgressBar} from "@/components/ui/ProgressBar";
 import {getRatingForParent} from "@/utils/userExerciseRating";
 import {useTheme} from "@/components/Theme";
+import {PopUpView} from "@/components/PopUpView";
+import {CreateSubjectView} from "@/components/subjects/CreateSubjectView";
+import {IsUserAdmin} from "@/components/auth/IsUserAdmin";
 
 export default function Page() {
     const [subjects, setSubject] = useState<SubjectDTO[]>([]);
-
+    const [showCrateSubjectView, setShowCreateSubjectView] = useState<boolean>(false);
     useEffect(() => {
         getAllSubjects().then((e) => setSubject(JSON.parse(e)));
     }, []);
@@ -20,13 +23,26 @@ export default function Page() {
     if (!subjects) {
         return <Loading/>;
     }
+
+    const handleAddSubject = (subject: SubjectDTO) => {
+        setSubject([...subjects, subject])
+    }
+
     return (
         <main className="w-screen h-screen flex items-center justify-center bg-bgColor_default">
-            <section className="flex mt-48 md:items-center justify-center flex-wrap md:mt-0">
+            <IsUserAdmin>
+                <button onClick={() => setShowCreateSubjectView(true)}
+                        className="w-32 h-10 top-32 right-10 bg-bgColor_inverse absolute rounded-md text-bgColor_default">Erstellen
+                </button>
+            </IsUserAdmin>
+            <section className="flex mt-48 md:items-center justify-center flex-wrap md:mt-0 relative">
                 {subjects.map((s) => (
                     <SubjectView subject={s} key={s.id}/>
                 ))}
             </section>
+            {showCrateSubjectView &&
+                <PopUpView handlePopUpClose={() => setShowCreateSubjectView(false)}><CreateSubjectView
+                    handleAddSubject={handleAddSubject}/></PopUpView>}
         </main>
     );
 }
