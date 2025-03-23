@@ -20,7 +20,6 @@ interface CreateSubjectViewProps {
 }
 
 const CreateSubjectView = ({
-  redirectUrl,
   parentId,
 }: CreateSubjectViewProps) => {
   const difficulties = ["Very Easy", "Easy", "Medium", "Hard", "Really Hard"];
@@ -47,7 +46,7 @@ const CreateSubjectView = ({
       };
       await updateSubjectById(parent.id, newParent);
     }
-    if (redirectUrl) router.push(redirectUrl);
+   router.back();
   };
   const handleAddExercise = () => {
     setSubject({
@@ -73,7 +72,7 @@ const CreateSubjectView = ({
       <section className="relative w-10/12 rounded-md border-borderColor_default border p-4 mt-4 flex flex-col">
         <button
           onClick={handleCreateNewSubject}
-          className="flex justify-center items-center absolute right-4 w-48 h-10 rounded-md bg-bgColor_inverse text-fgColor_onEmphasis font-semibold"
+          className="flex justify-center items-center absolute right-4 w-48 h-10 rounded-md bg-bgColor_inverse text-bgColor_default font-semibold"
         >
           {loading ? <Loading /> : " Subject erstellen"}
         </button>
@@ -85,10 +84,10 @@ const CreateSubjectView = ({
         <input
           value={subject.name}
           onChange={(e) => setSubject({ ...subject, name: e.target.value })}
-          className="w-full h-8 border border-borderColor_default pl-1 rounded-md"
+          className="w-full max-w-96 h-10 bg-transparent text-fgColor_default border border-borderColor_default pl-1 rounded-md"
         />
-        <label className="mt-2">Schwiergkeit</label>
-        <select className="w-1/2 h-8 border border-borderColor_default pl-1 rounded-md">
+        <label className="mt-2">Schwierigkeit</label>
+        <select className="text-bgColor_default w-1/2 h-8 border border-borderColor_default pl-1 rounded-md bg-bgColor_default">
           {difficulties.map((difficulty) => (
             <option key={difficulty}>{difficulty}</option>
           ))}
@@ -111,7 +110,7 @@ const CreateSubjectView = ({
         <select
           value={newExerciseType}
           onChange={(e) => setNewExerciseType(e.target.value as ExerciseTyp)}
-          className="bg-bgColor_inverse text-fgColor_onEmphasis absolute right-56 w-32 h-8 border border-borderColor_default pl-1 rounded-md"
+          className="text-bgColor_default bg-bgColor_inverse absolute right-56 w-32 h-8 border border-borderColor_default pl-1 rounded-md"
         >
           {exerciseVariants.map((variant) => (
             <option key={variant}>{variant}</option>
@@ -119,7 +118,7 @@ const CreateSubjectView = ({
         </select>
         <button
           onClick={handleAddExercise}
-          className="absolute right-4 w-48 h-10 rounded-md bg-bgColor_inverse text-fgColor_onEmphasis font-semibold"
+          className="absolute right-4 w-48 h-10 rounded-md bg-bgColor_inverse text-bgColor_default font-semibold"
         >
           Aufgabe hinzufügen
         </button>

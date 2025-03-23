@@ -11,12 +11,12 @@ import { IsUserAdmin } from "@/components/auth/IsUserAdmin";
 export default function Page() {
   const { subject } = useSubject();
   return (
-    <main className="flex h-screen items-center mt-32 flex-col relative">
+    <main className="flex items-center mt-32 flex-col relative">
       <div className="w-full flex px-4 pb-4 pt-6 flex-col rounded-t-md">
         <div className="flex items-center">
           <div
             style={{ backgroundColor: subject.color }}
-            className="rounded-full p-2 h-12 w-12"
+            className="rounded-full p-2 h-12 w-12 min-h-12 min-w-12"
           >
             <Image
               src={bookIcon}
@@ -26,7 +26,7 @@ export default function Page() {
               className="filter invert"
             />
           </div>
-          <h1 className="text-fgColor_default text-4xl font-bold pl-2">
+          <h1 className="text-fgColor_default text-4xl font-bold pl-2 break-all">
             {subject.name}
           </h1>
           <IsUserAdmin>

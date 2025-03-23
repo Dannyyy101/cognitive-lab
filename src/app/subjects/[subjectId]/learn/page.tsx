@@ -7,7 +7,7 @@ import {
   ExerciseTextComponent,
 } from "@/types/dtos/exerciseDTO";
 import React, { useState } from "react";
-import { Arrow } from "@/components/card/Arrow";
+import { Arrow } from "@/components/ui/button/Arrow";
 //import { setExerciseLearnedForUser } from "@/actions/userActions";
 //import { useUserSession } from "@/hooks/useUserSession";
 import Image from "next/image";
@@ -131,15 +131,15 @@ const ExerciseLearnCard = ({
     case "text":
       questionComponent = (
         <>
-          <label>Frage</label>
-          <Text>{(exercise.question[0] as ExerciseTextComponent).content}</Text>
+          <label className="text-fgColor_default">Frage</label>
+          <Text className="text-fgColor_default">{(exercise.question[0] as ExerciseTextComponent).content}</Text>
         </>
       );
       break;
     case "image":
       questionComponent = (
         <>
-          <label>Frage</label>
+          <label className="text-fgColor_default">Frage</label>
           <Image
             src={(exercise.question[0] as ExerciseImageComponent).imageUrl}
             alt="question-image"
@@ -154,11 +154,11 @@ const ExerciseLearnCard = ({
     case "text":
       answerComponent = (
         <div className="my-6 flex flex-col">
-          <label className="">Deine Antwort</label>
+          <label className="text-fgColor_default">Deine Antwort</label>
           <input
             value={userAnswer}
             onChange={(e) => handleUserAnswer(e.target.value)}
-            className="w-full max-w-96 h-10 pl-1 border border-borderColor_default rounded-md"
+            className="text-fgColor_default w-full bg-transparent max-w-96 h-10 pl-1 border border-borderColor_default rounded-md"
           />
         </div>
       );
