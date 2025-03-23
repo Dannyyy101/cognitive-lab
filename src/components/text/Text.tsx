@@ -10,8 +10,10 @@ interface TextProps extends React.HTMLAttributes<HTMLDivElement> {
 
 export const Text: React.FC<TextProps> = ({ children, ..._props }) => {
   return (
+      <div {..._props}>
     <ReactMarkdown remarkPlugins={[remarkMath]} rehypePlugins={[rehypeKatex]}>
       {children}
     </ReactMarkdown>
+      </div>
   );
 };

@@ -61,7 +61,6 @@ const CreateSubjectView = () => {
           (e) => e.id === oldExercise.id,
         );
         if (index === -1) {
-          console.log(oldSubject);
           await removeExercisesFromSubject(subject.id, oldExercise.id);
         }
       }),
@@ -98,7 +97,7 @@ const CreateSubjectView = () => {
       <section className="relative w-10/12 rounded-md border-borderColor_default border p-4 mt-4 flex flex-col">
         <button
           onClick={handleUpdateSubject}
-          className="absolute right-4 w-48 h-10 rounded-md bg-bgColor_inverse text-fgColor_onEmphasis font-semibold flex justify-center items-center"
+          className="absolute right-4 w-48 h-10 rounded-md bg-bgColor_inverse text-bgColor_default font-semibold flex justify-center items-center"
         >
           {loading ? <Loading /> : "Subject updaten"}
         </button>
@@ -110,12 +109,12 @@ const CreateSubjectView = () => {
         <input
           value={subject.name}
           onChange={(e) => setSubject({ ...subject, name: e.target.value })}
-          className="w-full h-8 border border-borderColor_default pl-1 rounded-md"
+          className="text-fgColor_default w-full max-w-96 h-10 bg-transparent border border-borderColor_default pl-1 rounded-md"
         />
         <label className="mt-2">Schwiergkeit</label>
         <select className="w-1/2 h-8 border border-borderColor_default pl-1 rounded-md">
           {difficulties.map((difficulty) => (
-            <option key={difficulty}>{difficulty}</option>
+            <option className="text-borderColor_default" key={difficulty}>{difficulty}</option>
           ))}
         </select>
       </section>
@@ -134,15 +133,15 @@ const CreateSubjectView = () => {
         <select
           value={newExerciseType}
           onChange={(e) => setNewExerciseType(e.target.value as ExerciseTyp)}
-          className="bg-bgColor_inverse text-fgColor_onEmphasis absolute right-56 w-32 h-8 border border-borderColor_default pl-1 rounded-md"
+          className="bg-bgColor_inverse text-borderColor_default absolute right-56 w-32 h-8 border border-borderColor_default pl-1 rounded-md"
         >
           {exerciseVariants.map((variant) => (
-            <option key={variant}>{variant}</option>
+            <option className="" key={variant}>{variant}</option>
           ))}
         </select>
         <button
           onClick={handleAddExercise}
-          className="absolute right-4 w-48 h-10 rounded-md bg-bgColor_inverse text-fgColor_onEmphasis font-semibold"
+          className="absolute right-4 w-48 h-10 rounded-md bg-bgColor_inverse text-borderColor_default font-semibold"
         >
           Aufgabe hinzufügen
         </button>
