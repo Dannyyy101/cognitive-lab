@@ -7,7 +7,7 @@ import {
     doc,
     DocumentReference,
     getDoc,
-    getDocs,
+    getDocs, orderBy,
     query,
     setDoc,
     where,
@@ -66,7 +66,7 @@ export const createNewSubject = async (subject: SubjectDTO) => {
 
 export const getAllSubjects = async () => {
     const col = collection(db, COLLECTION);
-    const q = query(col, where("parent", "==", null));
+    const q = query(col, where("parent", "==", null), orderBy("color"));
     const querySnapshot = await getDocs(q);
 
     const postsList = querySnapshot.docs.map(async (doc) => {

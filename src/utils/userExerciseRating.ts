@@ -64,7 +64,7 @@ export const getRatingForParent = (
         return 0;
     }
 
-    return (parent.children.reduce((sum:number, e:SubjectDTO) => sum + e.exercises.length, 0) / numberOfExercises * 100);
+    return Math.round(parent.children.reduce((sum:number, e:SubjectDTO) => sum + e.exercises.length, 0) / numberOfExercises * 100);
 };
 
 export const deleteLearnProgress = () =>{

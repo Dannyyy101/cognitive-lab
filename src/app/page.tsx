@@ -15,9 +15,14 @@ import {IsUserAdmin} from "@/components/auth/IsUserAdmin";
 
 export default function Page() {
     const [subjects, setSubject] = useState<SubjectDTO[]>([]);
+    const [searchedSubjects, setSearchedSubjects] = useState<SubjectDTO[]>([]);
+    const [searchInput, setSearchInput] = useState<string>("")
     const [showCrateSubjectView, setShowCreateSubjectView] = useState<boolean>(false);
     useEffect(() => {
-        getAllSubjects().then((e) => setSubject(JSON.parse(e)));
+        getAllSubjects().then((e) => {
+            setSubject(JSON.parse(e))
+            setSearchedSubjects(JSON.parse(e))
+        });
     }, []);
 
     if (!subjects) {
@@ -27,16 +32,28 @@ export default function Page() {
     const handleAddSubject = (subject: SubjectDTO) => {
         setSubject([...subjects, subject])
     }
+    const handleSearchInputChange = (value: string) => {
+        setSearchInput(value)
+        if (value.length > 0) {
+            setSearchedSubjects(subjects.filter((e) => e.name.toLowerCase().includes(value.toLowerCase())))
+        } else {
+            setSearchedSubjects(subjects)
+        }
+    }
 
     return (
-        <main className="w-screen h-screen flex items-center justify-center bg-bgColor_default">
+        <main className="w-screen min-h-screen flex flex-col items-center">
             <IsUserAdmin>
                 <button onClick={() => setShowCreateSubjectView(true)}
                         className="w-32 h-10 top-32 right-10 bg-bgColor_inverse absolute rounded-md text-bgColor_default">Erstellen
                 </button>
             </IsUserAdmin>
-            <section className="flex mt-48 md:items-center justify-center flex-wrap md:mt-0 relative">
-                {subjects.map((s) => (
+            <input
+                className="mt-32 w-96 bg-transparent border-borderColor_default border h-12 pl-2 rounded-md text-fgColor_default"
+                value={searchInput}
+                onChange={(e) => handleSearchInputChange(e.target.value)} placeholder={"Suche nach Kategorien"}/>
+            <section className="flex w-full mt-8 md:items-center justify-center flex-wrap relative overflow-y-auto">
+                {searchedSubjects.map((s) => (
                     <SubjectView subject={s} key={s.id}/>
                 ))}
             </section>
@@ -55,7 +72,6 @@ const SubjectView: React.FC<SubjectDisplayProps> = ({subject}) => {
     const numberOfExercises = subject.children.reduce((sum, e) => sum + e.exercises.length, 0)
     const rating = getRatingForParent(subject.id, numberOfExercises)
     const {theme} = useTheme()
-    console.log(theme)
 
     return (
         <Link
