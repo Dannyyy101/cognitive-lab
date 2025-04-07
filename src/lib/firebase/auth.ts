@@ -27,8 +27,8 @@ export async function signInWithGoogle(router: AppRouterInstance) {
         displayName: user.displayName || "",
         photoUrl: user.photoURL || "",
         learnedExercises: [],
+        role: "user"
       });
-      await setUserRole(result.user.uid, "user");
     }
     router.push("/");
   } catch (error) {

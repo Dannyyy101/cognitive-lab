@@ -3,6 +3,7 @@
 import { onAuthStateChanged, User } from "firebase/auth";
 import { useEffect, useState } from "react";
 import { auth } from "@/lib/firebase/clientApp";
+import {getUserById} from "@/actions/userActions";
 
 export function useUser() {
   const [user, setUser] = useState<User | null>(null);
@@ -13,9 +14,8 @@ export function useUser() {
       setUser(authUser);
 
       if (authUser) {
-        const idTokenResult = await authUser.getIdTokenResult();
-        console.log(idTokenResult.claims.roles);
-        setRole(idTokenResult.claims.role as string);
+        const roles = (await getUserById(authUser.uid))?.role;
+        setRole(roles as string);
       } else {
         setRole("");
       }

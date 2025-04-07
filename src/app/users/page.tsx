@@ -36,7 +36,7 @@ export default function Users() {
                         <tbody>
                         {users.map((user, index) => <tr key={index}
                                                         className="border-borderColor_default border text-fgColor_default ">
-                                <td className="flex ml-4 my-1">{user.photoUrl &&
+                                <td className="flex ml-4 my-1 items-center">{user.photoUrl &&
                                     <Image className="rounded-full" src={user.photoUrl} alt={"photo"} width={32}
                                            height={32}/>}
                                     <p className="pl-2">{user.displayName}</p></td>
