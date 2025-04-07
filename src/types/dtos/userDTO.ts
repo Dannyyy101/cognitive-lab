@@ -4,6 +4,7 @@ export interface UserDTO {
   displayName: string;
   photoUrl: string;
   learnedExercises: LearnedExercise[];
+  role:Role
 }
 
 export interface LearnedExercise {
@@ -12,3 +13,5 @@ export interface LearnedExercise {
   lastLearned: Date;
   correct: boolean;
 }
+
+export type Role = "admin" | "user"

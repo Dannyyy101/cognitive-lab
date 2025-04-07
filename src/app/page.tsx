@@ -31,6 +31,7 @@ export default function Page() {
 
     const handleAddSubject = (subject: SubjectDTO) => {
         setSubject([...subjects, subject])
+        setSearchedSubjects([...searchedSubjects, subject])
     }
     const handleSearchInputChange = (value: string) => {
         setSearchInput(value)

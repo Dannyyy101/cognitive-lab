@@ -19,7 +19,7 @@ export function useUserSession(initialUser: User | null) {
   useEffect(() => {
     onAuthStateChanged((authUser: User | null) => {
       if (!authUser && window.location.pathname !== "/auth") {
-        router.push("/auth");
+        //router.push("/auth");
       }
 
       // Refresh when user changes to ease testing

@@ -1,9 +1,18 @@
-import { doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
+import {collection, doc, getDoc, getDocs, setDoc, updateDoc} from "firebase/firestore";
 import { db } from "@/lib/firebase/clientApp";
-import { LearnedExercise, UserDTO } from "@/types/dtos/userDTO";
+import {LearnedExercise, Role, UserDTO} from "@/types/dtos/userDTO";
 import { arrayUnion } from "firebase/firestore";
+import {userConverter} from "@/lib/converter/userConverter";
+import {subjectWithExercisesConverter} from "@/lib/converter/subjectWithExercisesConverter";
 
 const COLLECTION = "users";
+
+export const getAllUsers = async () => {
+  const col = collection(db, COLLECTION).withConverter(userConverter)
+  const docs =  await getDocs(col)
+
+  return docs.docs.map((user) => user.data()).filter((user) => user !== null)
+}
 
 export const getUserById = async (userId: string): Promise<UserDTO | null> => {
   const ref = doc(db, COLLECTION, userId);
@@ -18,6 +27,11 @@ export const doesUserExist = async (userId: string) => {
   const documentSnapshot = await getDoc(ref);
   return documentSnapshot.exists();
 };
+
+export const changeRoleFromUser = async (userId:string, newRole:Role) =>{
+  const userCollection = doc(db, COLLECTION, userId)
+  await updateDoc(userCollection, {role: newRole});
+}
 
 export const createNewUser = async (user: UserDTO) => {
   const dbUser = await getUserById(user.id);

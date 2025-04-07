@@ -5,14 +5,20 @@ import {User} from "firebase/auth";
 import Image from "next/image";
 import Link from "next/link";
 import {ToggleThemeButton} from "@/components/ui/button/ToggleThemeButton";
+import {IsUserAdmin} from "@/components/auth/IsUserAdmin";
 
 export const Header = ({initialUser}: { initialUser: User | null }) => {
 
     const user = useUserSession(initialUser);
     return (
         <header className="absolute top-0 h-20 w-screen z-50 bg-bgColor_muted flex justify-end">
-            <div className="w-1/2 flex items-center justify-start md:ml-5 md:w-2/3">
+            <div className="w-1/3 flex items-center justify-start md:ml-5 md:w-1/3">
                 <Link href={"/"} className="text-2xl font-bold text-fgColor_default">Cognitive Lab</Link>
+            </div>
+            <div className="w-1/3 flex justify-center items-center">
+                <IsUserAdmin>
+                    <Link className="hover:underline text-fgColor_default text-xl font-semibold" href={"/users"}>Users</Link>
+                </IsUserAdmin>
             </div>
             <div className="flex h-full items-center mr-5 w-1/3 justify-end">
                 <ToggleThemeButton/>
