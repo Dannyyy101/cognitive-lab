@@ -24,7 +24,7 @@ export const SubjectProvider: React.FC<SubjectProviderProps> = ({
   useEffect(() => {
     if (subjectId) {
       try {
-        getSubjectById(subjectId).then((result) => setSubject(result));
+        getSubjectById(subjectId, {resolveAll: true}).then((result) => setSubject(JSON.parse(result)));
       } catch (error) {
         console.error("Failed to fetch subject:", error);
       }

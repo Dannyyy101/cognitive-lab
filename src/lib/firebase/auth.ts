@@ -7,7 +7,6 @@ import {
 import { auth } from "@/lib/firebase/clientApp";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 import { createNewUser, doesUserExist } from "@/actions/userActions";
-import { setUserRole } from "@/actions/firebase/firebaseRolesActions";
 
 export function onAuthStateChanged(cb: (user: User | null) => void) {
   return _onAuthStateChanged(auth, cb);
@@ -27,8 +26,8 @@ export async function signInWithGoogle(router: AppRouterInstance) {
         displayName: user.displayName || "",
         photoUrl: user.photoURL || "",
         learnedExercises: [],
+        role: "user"
       });
-      await setUserRole(result.user.uid, "user");
     }
     router.push("/");
   } catch (error) {

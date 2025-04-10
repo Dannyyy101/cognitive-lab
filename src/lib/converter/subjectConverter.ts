@@ -34,6 +34,6 @@ export const subjectConverter = {
     options: SnapshotOptions,
   ) => {
     const data = snapshot.data(options);
-    return { ...data, id: snapshot.id };
+    return { ...data, id: snapshot.id }
   },
 };

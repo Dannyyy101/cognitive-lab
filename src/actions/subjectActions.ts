@@ -22,6 +22,7 @@ import {deleteDoc} from "firebase/firestore";
 import {ExerciseBaseDTO} from "@/types/dtos/exerciseDTO";
 import {parentSubjectScheme} from "@/lib/zod/schemes/createParentSubjectScheme";
 import {FormState} from "@/types/formState";
+import {SubjectWithUnresolvedChildrenAndExercises} from "@/types/models/subject";
 
 const COLLECTION = "subjects";
 
@@ -81,7 +82,6 @@ export const getAllSubjects = async () => {
             })
         );
 
-        // Schutz gegen endlose Rekursion
         const children = await Promise.all(
             (data.children || []).map(async (childrenRef: DocumentReference) => {
                 const childrenDoc = await getDoc(childrenRef);
@@ -112,18 +112,72 @@ export const getAllSubjects = async () => {
 };
 
 
-export const getSubjectById = async (subjectId: string) => {
-    try {
-        const result = await fetch(`${BACKEND_URL}/subjects/${subjectId}`);
-        if (!result.ok) {
-            throw new Error("Failed to fetch data");
-        }
-        return (await result.json()) as SubjectDTO;
-    } catch (error) {
-        console.error("Fetch error:", error);
-        return null;
+export const getSubjectById = async (subjectId: string, optional?: { resolveAll?: boolean }): Promise<string> => {
+    // Can not use firebaseConverter because of the children and exercises that need to be resolved later on
+    const subjectCollection = doc(db, COLLECTION, subjectId)
+    const subjectSnapshot = await getDoc(subjectCollection);
+
+    if (!subjectSnapshot.exists()) {
+        throw new Error("Subject not found");
     }
+
+    const subject = subjectSnapshot.data() as SubjectWithUnresolvedChildrenAndExercises
+    const children = await resolveChildSubjects(subject.children, !!optional?.resolveAll)
+    const exercises = (await resolveExercises(subject.exercises))
+    console.log(subject)
+
+    return JSON.stringify({
+        id: subjectSnapshot.id,
+        name: subject.name,
+        color: subject.color,
+        parent: null,
+        lastEdited: subject.lastEdited,
+        createdOn: subject.createdOn,
+        bgColor: subject.bgColor,
+        children: children.filter((child) => child !== null),
+        exercises: exercises.filter((exercise) => exercise !== null)
+    })
 };
+
+const resolveChildSubjects = async (children: DocumentReference[], resolveAll: boolean): Promise<(SubjectDTO | null)[]> => {
+    return await Promise.all(
+        (children || []).map(async (childrenRef: DocumentReference) => {
+            const childrenDoc = await getDoc(childrenRef);
+            if (!childrenDoc.exists()) return null;
+
+            const exerciseDocData = childrenDoc.data();
+            let exercises: ExerciseBaseDTO[] = []
+            if (resolveAll) {
+                exercises = ((await resolveExercises(exerciseDocData.exercises)).filter((exercise) => exercise !== null))
+            } else {
+                (exerciseDocData.exercises || []).map((e: ExerciseBaseDTO) => e.id)
+            }
+
+            return {
+                id: childrenDoc.id,
+                bgColor: exerciseDocData.bgColor,
+                createdOn: exerciseDocData.createdOn,
+                color: exerciseDocData.color,
+                lastEdited: exerciseDocData.lastEdited,
+                name: exerciseDocData.name,
+                parent: null,
+                exercises: exercises,
+                children: [],
+            }
+        })
+    );
+}
+
+const resolveExercises = async (exercises: DocumentReference[]): Promise<(ExerciseBaseDTO | null)[]> => {
+    return await Promise.all(
+        exercises.map(async (exerciseRef: DocumentReference) => {
+                const exerciseDoc = await getDoc(exerciseRef)
+                if (!exerciseDoc.exists()) return null;
+                return {...exerciseDoc.data() as ExerciseBaseDTO}
+            }
+        )
+    )
+}
 
 export const updateSubjectById = async (
     subjectId: string,
