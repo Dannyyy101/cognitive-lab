@@ -1,6 +1,7 @@
-import {ExerciseTextComponent} from "@/types/dtos/exerciseDTO";
+import {ExerciseComponent, ExerciseTextComponent} from "@/types/dtos/exerciseDTO";
+import {Text} from "@/components/text/Text";
 
 
-export const ExerciseTextView = ({exercise, key}:{exercise: ExerciseTextComponent, key:string}) => {
-    return <div key={key} className="w-full">{exercise.content}</div>
+export const ExerciseTextView = ({exercise, key}:{exercise: ExerciseComponent, key:string}) => {
+    return <Text key={key} className="w-full">{(exercise as ExerciseTextComponent).content}</Text>
 }

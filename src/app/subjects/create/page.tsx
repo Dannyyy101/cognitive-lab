@@ -35,7 +35,7 @@ const CreateSubjectView = ({
   const handleCreateNewSubject = async () => {
     setLoading(true);
     let parent = null;
-    if (parentId) parent = await getSubjectById(parentId);
+    if (parentId) parent = JSON.parse(await getSubjectById(parentId));
 
     const id = await createNewSubject({ ...subject, parent: parent });
 

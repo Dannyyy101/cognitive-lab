@@ -1,4 +1,5 @@
-import { ExerciseBaseDTO, ExerciseTyp } from "@/types/dtos/exerciseDTO";
+import {ExerciseBaseDTO, ExerciseComponent, ExerciseTyp} from "@/types/dtos/exerciseDTO";
+import {ExerciseTextView} from "@/components/exercises/display/ExerciseTextView";
 
 export const getDefaultExerciseByType = (
   type: ExerciseTyp,
@@ -28,6 +29,13 @@ export const getDefaultExerciseByType = (
       return getDefaultExerciseByType("text");
   }
 };
+
+export const getExerciseViewByType = (questionOrAnswer:ExerciseComponent, key:string) => {
+  switch (questionOrAnswer.type) {
+    case "text":
+      return ExerciseTextView({exercise: questionOrAnswer, key: key})
+  }
+}
 
 export const isAnswerCorrect = (userInput: string, answer: string) => {
   // Regular expression to extract the text between slashes

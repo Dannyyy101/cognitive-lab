@@ -18,6 +18,6 @@ export const exerciseConverter = {
 
     if (!data) return null;
 
-    return data as ExerciseBaseDTO;
+    return {...data, id: snapshot.id} as ExerciseBaseDTO;
   },
 };

@@ -16,8 +16,9 @@ export const Header = ({initialUser}: { initialUser: User | null }) => {
                 <Link href={"/"} className="text-2xl font-bold text-fgColor_default">Cognitive Lab</Link>
             </div>
             <div className="w-1/3 flex justify-center items-center">
+                <Link className="hover:underline text-fgColor_default text-xl font-semibold px-4" href={"/exercises"}>Aufgaben</Link>
                 <IsUserAdmin>
-                    <Link className="hover:underline text-fgColor_default text-xl font-semibold" href={"/users"}>Users</Link>
+                    <Link className="hover:underline text-fgColor_default text-xl font-semibold px-4" href={"/users"}>Users</Link>
                 </IsUserAdmin>
             </div>
             <div className="flex h-full items-center mr-5 w-1/3 justify-end">

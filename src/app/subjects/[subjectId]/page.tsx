@@ -37,9 +37,9 @@ export default function Page() {
               Bearbeiten
             </Link>
           </IsUserAdmin>
-          <button className="absolute -top-6 md:top-0 right-4 w-32 h-10 rounded-md bg-bgColor_inverse text-bgColor_default font-semibold">
+          <Link href={`./${subject.id}/learnAll`} className="flex justify-center items-center absolute -top-6 md:top-0 right-4 w-32 h-10 rounded-md bg-bgColor_inverse text-bgColor_default font-semibold">
             Alle lernen
-          </button>
+          </Link>
         </div>
       </div>
 
