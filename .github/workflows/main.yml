@@ -1,0 +1,7 @@
+name: Run Tests
+on: [push]
+jobs:
+  UnitTests:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "test"
