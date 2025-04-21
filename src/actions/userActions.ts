@@ -1,10 +1,10 @@
-import {collection, doc, getDoc, getDocs, setDoc, updateDoc} from "firebase/firestore";
-import {db} from "@/lib/firebase/clientApp";
-import {LearnedExercise, Role, UserDTO} from "@/types/dtos/userDTO";
-import {arrayUnion} from "firebase/firestore";
-import {userConverter} from "@/lib/converter/userConverter";
+import { collection, doc, getDoc, getDocs, setDoc, updateDoc } from 'firebase/firestore'
+import { db } from '@/lib/firebase/clientApp'
+import { LearnedExercise, Role, UserDTO } from '@/types/dtos/userDTO'
+import { arrayUnion } from 'firebase/firestore'
+import { userConverter } from '@/lib/converter/userConverter'
 
-const COLLECTION = "users";
+const COLLECTION = 'users'
 
 export const getAllUsers = async () => {
     const col = collection(db, COLLECTION).withConverter(userConverter)
@@ -14,53 +14,48 @@ export const getAllUsers = async () => {
 }
 
 export const getUserById = async (userId: string): Promise<UserDTO | null> => {
-    const ref = doc(db, COLLECTION, userId);
-    const documentSnapshot = await getDoc(ref);
-    return documentSnapshot.exists()
-        ? (documentSnapshot.data() as UserDTO)
-        : null;
-};
+    const ref = doc(db, COLLECTION, userId)
+    const documentSnapshot = await getDoc(ref)
+    return documentSnapshot.exists() ? (documentSnapshot.data() as UserDTO) : null
+}
 
 export const doesUserExist = async (userId: string) => {
-    const ref = doc(db, COLLECTION, userId);
-    const documentSnapshot = await getDoc(ref);
-    return documentSnapshot.exists();
-};
+    const ref = doc(db, COLLECTION, userId)
+    const documentSnapshot = await getDoc(ref)
+    return documentSnapshot.exists()
+}
 
 export const changeRoleFromUser = async (userId: string, newRole: Role) => {
     const userCollection = doc(db, COLLECTION, userId)
-    await updateDoc(userCollection, {role: newRole});
+    await updateDoc(userCollection, { role: newRole })
 }
 
 export const createNewUser = async (user: UserDTO) => {
-    const dbUser = await getUserById(user.id);
+    const dbUser = await getUserById(user.id)
     if (dbUser) {
-        return dbUser;
+        return dbUser
     }
-    const ref = doc(db, COLLECTION, user.id);
-    await setDoc(ref, user);
+    const ref = doc(db, COLLECTION, user.id)
+    await setDoc(ref, user)
 
-    return await getUserById(user.id);
-};
+    return await getUserById(user.id)
+}
 
-export const setExerciseLearnedForUser = async (
-    userId: string,
-    learnedExercise: LearnedExercise,
-) => {
-    const ref = doc(db, COLLECTION, userId);
-    const user = await getDoc(ref);
+export const setExerciseLearnedForUser = async (userId: string, learnedExercise: LearnedExercise) => {
+    const ref = doc(db, COLLECTION, userId)
+    const user = await getDoc(ref)
 
-    if (!user.exists()) return null;
+    if (!user.exists()) return null
 
     const index = (user.data() as UserDTO).learnedExercises.findIndex(
-        (e) => e.exerciseId === learnedExercise.exerciseId,
-    );
+        (e) => e.exerciseId === learnedExercise.exerciseId
+    )
 
     if (index === -1) {
-        await updateDoc(ref, {learnedExercises: arrayUnion(learnedExercise)});
+        await updateDoc(ref, { learnedExercises: arrayUnion(learnedExercise) })
     } else {
-        const temp = [...(user.data() as UserDTO).learnedExercises];
-        temp[index] = learnedExercise;
-        await updateDoc(ref, {...user, learnedExercises: temp});
+        const temp = [...(user.data() as UserDTO).learnedExercises]
+        temp[index] = learnedExercise
+        await updateDoc(ref, { ...user, learnedExercises: temp })
     }
-};
+}

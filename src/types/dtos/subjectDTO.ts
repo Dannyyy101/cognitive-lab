@@ -1,10 +1,11 @@
-import {ExerciseBaseDTO} from "./exerciseDTO";
+import { ExerciseBaseDTO } from "./exerciseDTO";
 
 export interface SubjectDTO {
     id: string;
     name: string;
     color: string;
     bgColor: string;
+    difficulty?: number;
     exercises: ExerciseBaseDTO[];
     parent: SubjectDTO | null
     children: SubjectDTO[]

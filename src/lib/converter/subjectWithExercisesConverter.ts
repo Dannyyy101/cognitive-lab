@@ -10,12 +10,11 @@ import { db } from "@/lib/firebase/clientApp";
 export const subjectWithExercisesConverter = {
   toFirestore: (subject: SubjectDTO) => {
     const { id: _id, ...subjectWithoutId } = subject;
-
     return {
       ...subjectWithoutId,
-      exercises: subjectWithoutId.exercises.map((exercise) =>
-        doc(db, "exercises", exercise.id),
-      ),
+      exercises: subjectWithoutId.exercises.map((exercise) => {
+        return doc(db, "exercises", exercise.id)
+      }),
       children: subjectWithoutId.children.map((child) =>
         doc(db, "subjects", child.id),
       ),
