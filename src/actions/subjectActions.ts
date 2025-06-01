@@ -110,7 +110,6 @@ export const getSubjectById = async (subjectId: string, optional?: { resolveAll?
     const subject = subjectSnapshot.data() as SubjectWithUnresolvedChildrenAndExercises;
     const children = await resolveChildSubjects(subject.children, !!optional?.resolveAll);
     const exercises = await resolveExercises(subject.exercises);
-    console.log(subject);
 
     return JSON.stringify({
         id: subjectSnapshot.id,

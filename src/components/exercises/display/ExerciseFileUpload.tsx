@@ -14,12 +14,11 @@ export const ExerciseFileUpload: React.FC<ExerciseFileUploadProps> = ({ index, .
     const handleFileChange = async (event: ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0];
         if (file) {
-            const { data, error: _error } = await uploadFile(file);
-            if (data) {
+            const path = await uploadFile(file);
+            console.log(path);
+            if (path) {
                 const updatedExercises = [...subject.exercises];
-                (updatedExercises[index].question[0] as ExerciseImageComponent).imageUrl = IMAGE_URL + data.fullPath;
-                console.log('PATH', IMAGE_URL + data.fullPath);
-                console.log('exercises', updatedExercises);
+                (updatedExercises[index].question[0] as ExerciseImageComponent).imageUrl = IMAGE_URL + path;
                 setSubject({ ...subject, exercises: updatedExercises });
             }
         }

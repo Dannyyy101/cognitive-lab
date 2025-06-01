@@ -6,7 +6,6 @@ import { EditExerciseView } from '@/app/subjects/create/EditExerciseView';
 import { ExerciseExplorer } from '@/app/subjects/create/ExerciseExplorer';
 import { ExerciseBaseDTO, ExerciseTyp } from '@/types/dtos/exerciseDTO';
 import { removeExercisesFromSubject, updateSubjectById } from '@/actions/subjectActions';
-import deepEqual from 'deep-equal';
 import { createNewExercise, updateExerciseById } from '@/actions/exerciseActions';
 import { useRouter } from 'next/navigation';
 import { Loading } from '@/components/Loading';
@@ -32,11 +31,7 @@ const CreateSubjectView = () => {
                 const index = oldSubject.exercises.findIndex((e) => e.id === newExercise.id);
 
                 if (index !== -1) {
-                    const oldExercise = oldSubject.exercises[index];
-                    const equal = deepEqual(newExercise, oldExercise);
-                    if (!equal) {
-                        await updateExerciseById(newExercise.id, newExercise);
-                    }
+                    await updateExerciseById(newExercise.id, newExercise);
                     elementsToUpdate.push(newExercise);
                 } else {
                     const savedExercise = await createNewExercise(newExercise);
