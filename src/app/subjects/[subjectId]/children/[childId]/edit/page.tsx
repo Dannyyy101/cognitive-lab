@@ -88,7 +88,7 @@ export default function Page() {
                                     'justify-start flex flex-col w-32 bg-bgColor_inset absolute top-10 right-6 rounded-md border border-borderColor_default'
                                 }
                             >
-                                {TYPES.map((type) => (
+                                {TYPES.map((type: string) => (
                                     <button
                                         className={'w-full text-left hover:bg-bgColor_neutral_muted px-2'}
                                         key={type}
@@ -110,7 +110,7 @@ export default function Page() {
 
             <hr className="w-full px-2" />
             <section className="w-10/12 flex justify-start flex-wrap mt-4">
-                {subject.exercises.map((exercise) => (
+                {subject.exercises.map((exercise: Exercise) => (
                     <DisplayExercises exercise={exercise} key={exercise.id} />
                 ))}
             </section>
