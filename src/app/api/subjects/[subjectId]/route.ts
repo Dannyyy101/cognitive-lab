@@ -1,87 +1,55 @@
-import { NextRequest, NextResponse } from "next/server";
-import { doc, DocumentReference, getDoc } from "firebase/firestore";
-import { subjectWithExercisesConverter } from "@/lib/converter/subjectWithExercisesConverter";
-import { db } from "@/lib/firebase/clientApp";
+import { NextRequest, NextResponse } from 'next/server'
+import { createClient } from '@/lib/supabase/server'
 
-const COLLECTION = "subjects";
+export async function GET(request: NextRequest, { params }: { params: Promise<{ subjectId: string }> }) {
+    const subjectId = parseInt((await params).subjectId)
+    const supabase = await createClient()
+    const userResponse = await supabase.auth.getUser()
+    const user = userResponse.data.user
 
-export async function GET(request: NextRequest) {
-  const subjectId = request.nextUrl.pathname.split("/").pop();
+    if (!user) return NextResponse.json({ message: 'No valid user session' }, { status: 401 })
 
-  if (!subjectId) {
-    return NextResponse.json(
-      { error: "Invalid request param provided" },
-      { status: 404 },
-    );
-  }
-  try {
-    const col = doc(db, COLLECTION, subjectId).withConverter(
-      subjectWithExercisesConverter,
-    );
-    const postsSnapshot = await getDoc(col);
+    const { data, error } = await supabase
+        .from('subjects')
+        .select(
+            `
+    *,exercises:exercises(*, learned:learnedExercises(*)),
+    children:subjects(*, exercises:exercises(*, learned:learnedExercises(*)))
+  `
+        )
+        .eq('id', subjectId)
+        .single()
 
-    if (!postsSnapshot.exists()) {
-      return NextResponse.json(
-        {
-          error: "Document not found",
-        },
-        { status: 404 },
-      );
-    }
+    if (error) return NextResponse.json({ message: error.message, status: 500 })
 
-    const data = postsSnapshot.data();
-
-    // Check if exercises exist
-    if (!data || !data.exercises) {
-      console.warn(`Document with ID ${postsSnapshot.id} has no exercises.`);
-      return NextResponse.json({
-        id: postsSnapshot.id,
+    const filteredData = {
         ...data,
-        exercises: [],
-        children: [],
-      });
+        exercises: data.exercises?.map((exercise) => ({
+            ...exercise,
+            learned: exercise.learned?.filter((l) => l.userId === user?.id).length > 0,
+        })),
+        children: data.children?.map((child) => ({
+            ...child,
+            exercises: child.exercises?.map((exercise) => ({
+                ...exercise,
+                learned: exercise.learned?.filter((l) => l.userId === user?.id).length > 0,
+            })),
+        })),
     }
+    return NextResponse.json(filteredData)
+}
 
-    // Fetch exercise documents
-    const exercises = await Promise.all(
-      data.exercises.map(async (exerciseRef: DocumentReference) => {
-        const exerciseDoc = await getDoc(exerciseRef);
-        return exerciseDoc.exists()
-          ? { ...exerciseDoc.data(), id: exerciseDoc.id }
-          : null;
-      }),
-    );
+export async function DELETE(request: NextRequest, { params }: { params: Promise<{ subjectId: string }> }) {
+    const subjectId = parseInt((await params).subjectId)
+    const supabase = await createClient()
 
-    const children = await Promise.all(
-      data.children.map(async (childrenRef: DocumentReference) => {
-        const childrenDoc = await getDoc(childrenRef);
-        return childrenDoc.exists()
-          ? { id: childrenDoc.id, ...childrenDoc.data() }
-          : null;
-      }),
-    );
+    const { data } = await supabase.from('exercises').select().eq('subjectId', subjectId)
 
-    let parent = null;
-    if (data.parent) {
-      const childrenDoc = await getDoc(data.parent);
-      parent = childrenDoc.exists()
-        ? { id: childrenDoc.id, ...(childrenDoc.data() || {}) }
-        : null;
-    }
+    if (data && data.length > 0)
+        return NextResponse.json({ message: 'Cant delete Subjects still has exercises' }, { status: 409 })
 
-    // Return the post with valid exercises
-    return NextResponse.json({
-      ...data,
-      id: postsSnapshot.id,
-      exercises: exercises.filter((exercise) => exercise !== null),
-      children: children.filter((children) => children !== null),
-      parent: parent,
-    });
-  } catch (error) {
-    console.error("Error fetching documents: ", error);
-    return NextResponse.json(
-      { error: "Failed to fetch documents" },
-      { status: 500 },
-    );
-  }
+    const { error } = await supabase.from('subjects').delete().eq('id', subjectId)
+
+    if (error) return NextResponse.json({ message: error.message }, { status: 500 })
+    return NextResponse.json({ message: 'Deleted' }, { status: 200 })
 }
