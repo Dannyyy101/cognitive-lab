@@ -1,61 +1,67 @@
-import { getSubjectById } from "@/actions/subjectActions";
-import { Loading } from "@/components/Loading";
-import React, { createContext, useContext, useEffect, useState } from "react";
-import { SubjectDTO } from "@/types/dtos/subjectDTO";
-
+import { Loading } from '@/components/Loading'
+import React, { createContext, useContext, useEffect, useState } from 'react'
+import { Subject } from '@/types/models/subject'
+import { useRefreshStore } from '@/hooks/useRefreshStore'
 interface SubjectProviderProps {
-  children: React.ReactNode;
-  subjectId?: string;
+    children: React.ReactNode
+    subjectId?: string
 }
 
 interface SubjectContextType {
-  subject: SubjectDTO;
-  setSubject: (subject: SubjectDTO) => void;
+    subject: Subject
+    setSubject: (subject: Subject) => void
 }
 
-const SubjectContext = createContext<SubjectContextType | undefined>(undefined);
+const SubjectContext = createContext<SubjectContextType | undefined>(undefined)
 
-export const SubjectProvider: React.FC<SubjectProviderProps> = ({
-  children,
-  subjectId,
-}) => {
-  const [subject, setSubject] = useState<SubjectDTO | null>(null);
+export const SubjectProvider: React.FC<SubjectProviderProps> = ({ children, subjectId }) => {
+    const [subject, setSubject] = useState<Subject | null>(null)
+    const { shouldRefresh, clearRefresh } = useRefreshStore()
 
-  useEffect(() => {
-    if (subjectId) {
-      try {
-        getSubjectById(subjectId, {resolveAll: true}).then((result) => setSubject(JSON.parse(result)));
-      } catch (error) {
-        console.error("Failed to fetch subject:", error);
-      }
-    } else {
-      setSubject({
-        id: "",
-        parent: null,
-        name: "",
-        exercises: [],
-        children: [],
-        lastEdited: new Date(),
-        color: "",
-        bgColor: "",
-        createdOn: new Date(),
-      });
-    }
-  }, [subjectId]);
+    useEffect(() => {
+        if (subjectId) {
+            try {
+                fetch(`/api/subjects/${subjectId}`).then((response) => {
+                    if (response.ok) {
+                        response.json().then((result) => {
+                            setSubject(result)
+                        })
+                    } else {
+                        response.json().then((error) => {
+                            throw new Error(error.message)
+                        })
+                    }
+                })
+            } catch (error) {
+                console.error('Failed to fetch subject:', error)
+            } finally {
+                if (shouldRefresh) {
+                    clearRefresh()
+                }
+            }
+        } else {
+            setSubject({
+                id: -1,
+                parent: null,
+                name: '',
+                exercises: [],
+                children: [],
+                primaryColor: '#fff',
+                secondaryColor: '#fff',
+                created_at: new Date().toDateString(),
+            })
+        }
+    }, [subjectId, shouldRefresh])
 
-  if (!subject) return <Loading />;
+    if (!subject) return <Loading />
 
-  return (
-    <SubjectContext.Provider value={{ subject, setSubject }}>
-      {children}
-    </SubjectContext.Provider>
-  );
-};
+    return <SubjectContext.Provider value={{ subject, setSubject }}>{children}</SubjectContext.Provider>
+}
 
 export const useSubject = () => {
-  const context = useContext(SubjectContext);
-  if (context === undefined) {
-    throw new Error("useSubject must be used within an SubjectProvider");
-  }
-  return context;
-};
+    const context = useContext(SubjectContext)
+    if (context === undefined) {
+        throw new Error('useSubject must be used within an SubjectProvider')
+    }
+    return context
+}

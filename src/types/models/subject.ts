@@ -1,13 +1,15 @@
-import { DocumentReference } from "firebase/firestore";
+import { Database } from '@/types/database.types'
+import { BaseLearnedExercise, Exercise } from '@/types/models/exercise'
 
-export interface SubjectWithUnresolvedChildrenAndExercises {
-    id: string;
-    name: string;
-    color: string;
-    bgColor:string
-    exercises:DocumentReference[]
-    parent: DocumentReference
-    children: DocumentReference[]
-    lastEdited: Date
-    createdOn: Date
+export type Subject = Database['public']['Tables']['subjects']['Row'] & {
+    exercises: Exercise[]
+    children: Subject[]
+}
+
+export type BaseSubjectWithExercises = Database['public']['Tables']['subjects']['Row'] & {
+    exercises: BaseLearnedExercise[]
+}
+
+export type BaseSubjectWithChildren = Database['public']['Tables']['subjects']['Row'] & {
+    children: BaseSubjectWithExercises[]
 }

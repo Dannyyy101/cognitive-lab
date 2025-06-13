@@ -1,156 +1,155 @@
-"use client";
-import React, { useState } from "react";
-import { useSubject } from "@/context/SubjectProvider";
-import { getDefaultExerciseByType } from "@/utils/exerciseFunctions";
-import { EditExerciseView } from "@/app/subjects/create/EditExerciseView";
-import { ExerciseExplorer } from "@/app/subjects/create/ExerciseExplorer";
-import { ExerciseBaseDTO, ExerciseTyp } from "@/types/dtos/exerciseDTO";
-import {
-  removeExercisesFromSubject,
-  updateSubjectById,
-} from "@/actions/subjectActions";
-import deepEqual from "deep-equal";
-import {
-  createNewExercise,
-  updateExerciseById,
-} from "@/actions/exerciseActions";
-import { useRouter } from "next/navigation";
-import { Loading } from "@/components/Loading";
-import {IsUserAdmin} from "@/components/auth/IsUserAdmin";
+'use client'
 
-const CreateSubjectView = () => {
-  const difficulties = ["Very Easy", "Easy", "Medium", "Hard", "Really Hard"];
-  const exerciseVariants: ExerciseTyp[] = ["text", "multiple-choice", "image"];
-  const [newExerciseType, setNewExerciseType] = useState<ExerciseTyp>("text");
-  const [newExerciseIndex, setNewExerciseIndex] = useState<number>(0);
-  const [loading, setLoading] = useState<boolean>(false);
-  const router = useRouter();
-
-  const { subject, setSubject } = useSubject();
-  const [oldSubject, _setOldSubject] = useState(subject);
-
-  const handleUpdateSubject = async () => {
-    setLoading(true);
-    const elementsToUpdate: ExerciseBaseDTO[] = [];
-
-    await Promise.all(
-      subject.exercises.map(async (newExercise) => {
-        const index = oldSubject.exercises.findIndex(
-          (e) => e.id === newExercise.id,
-        );
-
-        if (index !== -1) {
-          const oldExercise = oldSubject.exercises[index];
-          const equal = deepEqual(newExercise, oldExercise);
-          console.log(equal);
-          if (!equal) {
-            await updateExerciseById(newExercise.id, newExercise);
-          }
-          elementsToUpdate.push(newExercise);
-        } else {
-          const savedExercise = await createNewExercise(newExercise);
-          console.log("Saved Exercise:", savedExercise);
-          elementsToUpdate.push(savedExercise);
-        }
-      }),
-    );
-
-    await Promise.all(
-      oldSubject.exercises.map(async (oldExercise) => {
-        const index = subject.exercises.findIndex(
-          (e) => e.id === oldExercise.id,
-        );
-        if (index === -1) {
-          await removeExercisesFromSubject(subject.id, oldExercise.id);
-        }
-      }),
-    );
-
-    await updateSubjectById(subject.id, {
-      ...subject,
-      exercises: elementsToUpdate,
-    });
-    setLoading(false);
-    router.back();
-  };
-
-  const handleAddExercise = () => {
-    setSubject({
-      ...subject,
-      exercises: [
-        ...subject.exercises,
-        getDefaultExerciseByType(newExerciseType),
-      ],
-    });
-  };
-
-  return (
-    <main className="w-screen mt-32 flex justify-center items-center flex-col h-fit">
-      <IsUserAdmin>
-      <section className="w-10/12">
-        <h1 className="text-3xl font-bold">Editiere eine Aufgabe</h1>
-        <p className="text-fgColor_disabled text-sm">
-          Entwerfen Sie Fragen und stellen Sie Ihre Übung zusammen
-        </p>
-      </section>
-
-      <section className="relative w-10/12 rounded-md border-borderColor_default border p-4 mt-4 flex flex-col">
-        <button
-          onClick={handleUpdateSubject}
-          className="absolute right-4 w-48 h-10 rounded-md bg-bgColor_inverse text-bgColor_default font-semibold flex justify-center items-center"
-        >
-          {loading ? <Loading /> : "Subject updaten"}
-        </button>
-        <h2 className="text-2xl font-bold">Subject Details</h2>
-        <p className="text-fgColor_disabled text-sm">
-          Enter the basic information about your exercise
-        </p>
-        <label className="mt-4">Subject Name</label>
-        <input
-          value={subject.name}
-          onChange={(e) => setSubject({ ...subject, name: e.target.value })}
-          className="text-fgColor_default w-full max-w-96 h-10 bg-transparent border border-borderColor_default pl-1 rounded-md"
-        />
-        <label className="mt-2">Schwiergkeit</label>
-        <select className="w-1/2 h-8 border border-borderColor_default pl-1 rounded-md">
-          {difficulties.map((difficulty) => (
-            <option className="text-borderColor_default" key={difficulty}>{difficulty}</option>
-          ))}
-        </select>
-      </section>
-      <section className="w-10/12 rounded-md border-borderColor_default border p-4 mt-8 flex flex-col relative">
-        <h2 className="text-2xl font-bold">Fragen</h2>
-        <p className="text-fgColor_disabled text-sm">
-          Enter the basic information about your exercise
-        </p>
-        <div className="flex">
-          <ExerciseExplorer
-            handleFocusExercise={(n) => setNewExerciseIndex(n)}
-            focusedExerciseIndex={newExerciseIndex}
-          />
-          <EditExerciseView index={newExerciseIndex} />
-        </div>
-        <select
-          value={newExerciseType}
-          onChange={(e) => setNewExerciseType(e.target.value as ExerciseTyp)}
-          className="bg-bgColor_inverse text-borderColor_default absolute right-56 w-32 h-8 border border-borderColor_default pl-1 rounded-md"
-        >
-          {exerciseVariants.map((variant) => (
-            <option className="" key={variant}>{variant}</option>
-          ))}
-        </select>
-        <button
-          onClick={handleAddExercise}
-          className="absolute right-4 w-48 h-10 rounded-md bg-bgColor_inverse text-borderColor_default font-semibold"
-        >
-          Aufgabe hinzufügen
-        </button>
-      </section>
-      </IsUserAdmin>
-    </main>
-  );
-};
+import React, { useState } from 'react'
+import { useSubject } from '@/context/SubjectProvider'
+import Image from 'next/image'
+import bookIcon from '@/media/book.svg'
+import { IsUserAdmin } from '@/components/auth/IsUserAdmin'
+import { Exercise } from '@/types/models/exercise'
+import { ExerciseQuestionComponent } from '@/components/exercises/display/ExerciseQuestionComponent'
+import { TrashIcon } from '@/components/ui/Icons'
+import { DEFAULT_EXERCISE, TYPES } from '@/utils/constants'
+import { PopUpView } from '@/components/PopUpView'
+import { ExerciseCard } from '@/components/exercises/ExerciseCard'
+import { ExerciseProvider } from '@/context/ExerciseProvider'
+import { DeleteModal } from '@/components/ui/DeleteModal'
+import { useRouter } from 'next/navigation'
+import { Button } from '@/components/ui/button/Button'
+import { useRefreshStore } from '@/hooks/useRefreshStore'
 
 export default function Page() {
-  return <CreateSubjectView />;
+    const { subject, setSubject } = useSubject()
+    const [showTypeFields, setShowTypeFields] = useState<boolean>(false)
+    const [newExercise, setNewExercise] = useState<Exercise | null>(null)
+    const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false)
+
+    const router = useRouter()
+
+    const handleShowCreateExerciseDialog = (type: string) => {
+        setShowTypeFields(false)
+        setNewExercise({ ...DEFAULT_EXERCISE, type: type })
+    }
+
+    const handleDeleteSubject = async () => {
+        const response = await fetch(`/api/subjects/${subject.id}`, { method: 'DELETE' })
+        console.log(response)
+        if (response.ok) {
+            useRefreshStore.getState().triggerRefresh()
+            router.back()
+        }
+    }
+
+    const handleCreateNewExercise = async (exercise: Exercise) => {
+        const response = await fetch('/api/exercises/', {
+            method: 'POST',
+            body: JSON.stringify({ ...exercise, subjectId: subject.id }),
+        })
+        const newExerciseId: number = (await response.json()).id
+        setSubject({ ...subject, exercises: [...subject.exercises, { ...exercise, id: newExerciseId }] })
+        setNewExercise(null)
+    }
+
+    return (
+        <main className="flex items-center mt-32 flex-col relative">
+            {showDeleteModal && (
+                <PopUpView handlePopUpClose={() => setShowDeleteModal(false)}>
+                    <DeleteModal type={'Subject'} name={subject.name} deleteItem={handleDeleteSubject} />
+                </PopUpView>
+            )}
+            <div className="w-full flex px-4 pb-4 pt-6 flex-col rounded-t-md">
+                <div className="flex items-center">
+                    <div
+                        style={{ backgroundColor: subject.primaryColor }}
+                        className="rounded-full p-2 h-12 w-12 min-h-12 min-w-12"
+                    >
+                        <Image src={bookIcon} alt={'book-icon'} width={32} height={32} className="filter invert" />
+                    </div>
+                    <h1 className="text-fgColor_default text-4xl font-bold pl-2 break-all">{subject.name}</h1>
+                    <IsUserAdmin>
+                        <Button
+                            onClick={() => setShowDeleteModal((prev) => !prev)}
+                            variant="danger"
+                            className={`absolute right-40 w-32 h-10 rounded-md font-semibold top-0`}
+                            disabled={subject.exercises.length > 0}
+                        >
+                            Löschen
+                        </Button>
+                        <button
+                            className={`bg-bgColor_accent_emphasis w-32 h-10 text-white rounded-md top-0 right-6 absolute `}
+                            onClick={() => setShowTypeFields(!showTypeFields)}
+                        >
+                            Erstellen
+                        </button>
+                        {showTypeFields && (
+                            <div
+                                className={
+                                    'justify-start flex flex-col w-32 bg-bgColor_inset absolute top-10 right-6 rounded-md border border-borderColor_default'
+                                }
+                            >
+                                {TYPES.map((type: string) => (
+                                    <button
+                                        className={'w-full text-left hover:bg-bgColor_neutral_muted px-2'}
+                                        key={type}
+                                        onClick={() => handleShowCreateExerciseDialog(type)}
+                                    >
+                                        {type}
+                                    </button>
+                                ))}
+                            </div>
+                        )}
+                        {newExercise && (
+                            <PopUpView handlePopUpClose={() => setNewExercise(null)}>
+                                <ExerciseCard exercise={newExercise} edit={true} onChange={handleCreateNewExercise} />
+                            </PopUpView>
+                        )}
+                    </IsUserAdmin>
+                </div>
+            </div>
+
+            <hr className="w-full px-2" />
+            <section className="w-10/12 flex justify-start flex-wrap mt-4">
+                {subject.exercises.map((exercise: Exercise) => (
+                    <DisplayExercises exercise={exercise} key={exercise.id} />
+                ))}
+            </section>
+        </main>
+    )
+}
+
+const DisplayExercises = ({ exercise }: { exercise: Exercise }) => {
+    const [showDeleteExerciseModal, setShowDeleteExerciseModal] = useState<boolean>()
+    const { subject, setSubject } = useSubject()
+
+    const handleDeleteExercise = async () => {
+        await fetch(`/api/exercises/${exercise.id}`, { method: 'DELETE' })
+        setSubject({ ...subject, exercises: subject.exercises.filter((item) => item.id !== exercise.id) })
+    }
+
+    return (
+        <>
+            {showDeleteExerciseModal && (
+                <PopUpView handlePopUpClose={() => setShowDeleteExerciseModal(false)}>
+                    <DeleteModal
+                        type={'Exercise'}
+                        name={exercise.title}
+                        close={() => setShowDeleteExerciseModal(false)}
+                        deleteItem={handleDeleteExercise}
+                    />
+                </PopUpView>
+            )}
+            <div className={'w-64 h-32 bg-bgColor_inset border border-borderColor_default rounded-md relative m-2'}>
+                <div className={'absolute top-2 right-4 flex'}>
+                    <button onClick={() => setShowDeleteExerciseModal(true)}>
+                        <TrashIcon className={'w-6 h-6'} />
+                    </button>
+                </div>
+                <ExerciseProvider oldExercise={exercise}>
+                    <ExerciseQuestionComponent />
+                </ExerciseProvider>
+                <label className={'bg-bgColor_accent_muted rounded-xl text-fgColor_accent px-2 py-0.5 ml-2'}>
+                    {exercise.type}
+                </label>
+            </div>
+        </>
+    )
 }

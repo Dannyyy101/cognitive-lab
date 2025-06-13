@@ -1,56 +1,13 @@
-import { NextRequest, NextResponse } from "next/server";
-import { deleteDoc, doc, getDoc, updateDoc } from "firebase/firestore";
-import { exerciseConverter } from "@/lib/converter/exerciseConverter";
-import {db} from "@/lib/firebase/clientApp";
+import { NextRequest, NextResponse } from 'next/server'
+import { createClient } from '@/lib/supabase/server'
 
-const COLLECTION = "exercises"
+export async function DELETE(request: NextRequest, { params }: { params: Promise<{ exerciseId: string }> }) {
+    const exerciseId = parseInt((await params).exerciseId)
+    const supabase = await createClient()
 
-export async function GET(request: NextRequest) {
-  const exerciseId = request.nextUrl.pathname.split("/").pop();
+    const { error } = await supabase.from('exercises').delete().eq('id', exerciseId)
 
-  if (!exerciseId) {
-    return NextResponse.json({ error: "Invalid request param provided" }, { status: 404 });
-  }
+    if (error) return NextResponse.json({ message: error.message }, { status: 500 })
 
-  const ref = doc(db, COLLECTION, exerciseId).withConverter(exerciseConverter);
-  const postsSnapshot = await getDoc(ref);
-  if (postsSnapshot.exists()) {
-    return NextResponse.json(postsSnapshot.data());
-  }
-}
-
-export async function DELETE(request: NextRequest) {
-  const exerciseId = request.nextUrl.pathname.split("/").pop();
-
-  if (!exerciseId) {
-    return NextResponse.json({ error: "Invalid request param provided" }, { status: 404 });
-  }
-
-  const ref = doc(db, COLLECTION, exerciseId).withConverter(exerciseConverter);
-  await deleteDoc(ref);
-}
-
-export async function PUT(request: NextRequest) {
-  const exerciseId = request.nextUrl.pathname.split("/").pop();
-
-  if (!exerciseId) {
-    return NextResponse.json({ error: "Invalid request param provided" }, { status: 404 });
-  }
-
-  try {
-    // Parse den Request-Body
-    const body = await request.json();
-
-    if (!body) {
-      return NextResponse.json({ error: "No data provided" }, { status: 400 });
-    }
-
-    const ref = doc(db, COLLECTION, exerciseId).withConverter(exerciseConverter);
-    await updateDoc(ref, body);
-
-    return NextResponse.json({ success: true }, { status: 200 });
-  } catch (error) {
-    console.error("Error updating document:", error);
-    return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
-  }
+    return NextResponse.json({ message: 'Deleted' }, { status: 200 })
 }

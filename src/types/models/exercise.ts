@@ -1,17 +1,18 @@
+import { Database } from '@/types/database.types'
 
+export type BaseExercise = Database['public']['Tables']['exercises']['Row']
 
-export interface ExerciseNormal extends ExerciseBase {
-    answer: string;
+export type BaseLearnedExercise = BaseExercise & {
+    learned: Learned[]
 }
 
-export interface ExerciseMultipleChoice extends ExerciseBase {
-    answer: string;
-    choices: string[]
-
+export type Exercise = Omit<BaseExercise, 'content'> & {
+    content: { question: string; answer: string }
+    learned: boolean
 }
 
-export interface ExerciseBase {
-    id:string
-    question: string;
-    type: string;
+export type ExerciseText = Exercise & {
+    content: { question: string; answer: string }
 }
+
+export type Learned = Database['public']['Tables']['learnedExercises']['Row']
