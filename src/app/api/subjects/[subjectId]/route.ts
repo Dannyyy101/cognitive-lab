@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
+import { BaseLearnedExercise, Learned } from '@/types/models/exercise'
+import { BaseSubjectWithExercises } from '@/types/models/subject'
 
 export async function GET(request: NextRequest, { params }: { params: Promise<{ subjectId: string }> }) {
     const subjectId = parseInt((await params).subjectId)
@@ -24,15 +26,15 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
 
     const filteredData = {
         ...data,
-        exercises: data.exercises?.map((exercise) => ({
+        exercises: data.exercises?.map((exercise: BaseLearnedExercise) => ({
             ...exercise,
-            learned: exercise.learned?.filter((l) => l.userId === user?.id).length > 0,
+            learned: exercise.learned?.filter((l: Learned) => l.userId === user?.id).length > 0,
         })),
-        children: data.children?.map((child) => ({
+        children: data.children?.map((child: BaseSubjectWithExercises) => ({
             ...child,
-            exercises: child.exercises?.map((exercise) => ({
+            exercises: child.exercises?.map((exercise: BaseLearnedExercise) => ({
                 ...exercise,
-                learned: exercise.learned?.filter((l) => l.userId === user?.id).length > 0,
+                learned: exercise.learned?.filter((l: Learned) => l.userId === user?.id).length > 0,
             })),
         })),
     }
