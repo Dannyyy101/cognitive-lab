@@ -3,7 +3,7 @@ import React, { useState } from 'react'
 interface DeleteModalProps {
     type: string
     name: string
-    close: () => void
+    close?: () => void
     deleteItem: () => void
 }
 
@@ -13,6 +13,7 @@ export const DeleteModal: React.FC<DeleteModalProps> = ({ type, name, close, del
     const handleDelete = () => {
         if (userInput === name) {
             deleteItem()
+            if (close) close()
         } else {
             setErrorMessage('Ungültige Eingabe')
         }

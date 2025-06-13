@@ -12,20 +12,26 @@ import { PopUpView } from '@/components/PopUpView'
 import { IsUserAdmin } from '@/components/auth/IsUserAdmin'
 import { Subject } from '@/types/models/subject'
 import { DeleteModal } from '@/components/ui/DeleteModal'
+import { CreateSubjectView } from '@/components/subjects/CreateSubjectView'
+import { Button } from '@/components/ui/button/Button'
 
 export default function Page() {
     const [showDeletePopUp, setShowDeletePopUp] = useState<boolean>(false)
+    const [showCrateSubjectView, setShowCreateSubjectView] = useState<boolean>(false)
     const { subject, setSubject } = useSubject()
     const router = useRouter()
-
-    const handleUpdateSubject = async () => {
-        //await updateSubjectById(subject.id, subject)
-        router.back()
-    }
 
     const handleDeleteSubject = async () => {
         //await deleteSubjectById(subject.id)
         router.push('/')
+    }
+
+    const handleNavigateBack = () => {
+        router.back()
+    }
+
+    const handleAddSubject = (newSubject: Subject) => {
+        setSubject({ ...subject, children: [...subject.children, newSubject] })
     }
 
     return (
@@ -41,17 +47,19 @@ export default function Page() {
                             value={subject.name}
                             className="border-borderColor_default border text-fgColor_default text-4xl font-bold pl-2 bg-transparent"
                         />
-                        <button
+                        <Button
+                            variant="danger"
                             onClick={() => setShowDeletePopUp(true)}
-                            className="absolute right-40 w-32 h-10 rounded-md bg-bgColor_danger_muted text-fgColor_danger font-semibold -top-6 md:top-0"
+                            disabled={subject.children.length > 0}
+                            className={`absolute right-40 w-32 h-10 rounded-mdtop-0`}
                         >
                             Löschen
-                        </button>
+                        </Button>
                         <button
-                            onClick={handleUpdateSubject}
-                            className="absolute right-4 w-32 h-10 rounded-md bg-bgColor_inverse text-bgColor_default font-semibold -top-6 md:top-0"
+                            onClick={handleNavigateBack}
+                            className="absolute right-4 w-32 h-10 rounded-md bg-bgColor_inverse text-bgColor_default font-semibold top-0"
                         >
-                            Speichern
+                            Zurück
                         </button>
                     </div>
                 </div>
@@ -61,13 +69,18 @@ export default function Page() {
                     {subject.children.map((child) => (
                         <DisplaySubjects subject={child} key={child.id} />
                     ))}
-                    <Link
-                        href={`/subjects/create?parentId=${subject.id}`}
+                    <button
+                        onClick={() => setShowCreateSubjectView((prev) => !prev)}
                         className="m-2 p-4 rounded-md border-borderColor_default border w-80 h-40 flex justify-center items-center"
                     >
                         <ImageIcon src={plusIcon} alt="plus-icon" />
-                    </Link>
+                    </button>
                 </section>
+                {showCrateSubjectView && (
+                    <PopUpView handlePopUpClose={() => setShowCreateSubjectView(false)}>
+                        <CreateSubjectView parentId={subject.id} handleAddSubject={handleAddSubject} />
+                    </PopUpView>
+                )}
                 {showDeletePopUp && (
                     <PopUpView handlePopUpClose={() => setShowDeletePopUp(false)}>
                         <DeleteModal

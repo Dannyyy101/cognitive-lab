@@ -15,6 +15,8 @@ import { ExerciseProvider } from '@/context/ExerciseProvider'
 import { DeleteModal } from '@/components/ui/DeleteModal'
 import { useRouter } from 'next/navigation'
 import { usePathname } from 'next/navigation'
+import { Button } from '@/components/ui/button/Button'
+import { useRefreshStore } from '@/hooks/useRefreshStore'
 
 export default function Page() {
     const { subject, setSubject } = useSubject()
@@ -32,9 +34,15 @@ export default function Page() {
 
     const handleDeleteSubject = async () => {
         const response = await fetch(`/api/subjects/${subject.id}`, { method: 'DELETE' })
+        console.log(response)
         if (response.ok) {
-            router.push(pathname.replace(/\/children\/\d\/edit/, ''))
+            useRefreshStore.getState().triggerRefresh()
+            router.back()
         }
+    }
+
+    const handleNavigateBack = () => {
+        router.back()
     }
 
     const handleCreateNewExercise = async (exercise: Exercise) => {
@@ -51,12 +59,7 @@ export default function Page() {
         <main className="flex items-center mt-32 flex-col relative">
             {showDeleteModal && (
                 <PopUpView handlePopUpClose={() => setShowDeleteModal(false)}>
-                    <DeleteModal
-                        type={'Subject'}
-                        name={subject.name}
-                        close={() => setShowDeleteModal(false)}
-                        deleteItem={handleDeleteSubject}
-                    />
+                    <DeleteModal type={'Subject'} name={subject.name} deleteItem={handleDeleteSubject} />
                 </PopUpView>
             )}
             <div className="w-full flex px-4 pb-4 pt-6 flex-col rounded-t-md">
@@ -69,13 +72,14 @@ export default function Page() {
                     </div>
                     <h1 className="text-fgColor_default text-4xl font-bold pl-2 break-all">{subject.name}</h1>
                     <IsUserAdmin>
-                        <button
+                        <Button
                             onClick={() => setShowDeleteModal((prev) => !prev)}
-                            className={` ${subject.exercises.length > 0 ? 'bg-bgColor_disabled text-gray-400 cursor-not-allowed' : 'bg-bgColor_danger_emphasis text-white'} flex justify-center items-center absolute right-40 w-32 h-10 rounded-md font-semibold top-0`}
+                            variant="danger"
+                            className={`absolute right-40 w-32 h-10 rounded-md font-semibold top-0`}
                             disabled={subject.exercises.length > 0}
                         >
                             Löschen
-                        </button>
+                        </Button>
                         <button
                             className={`bg-bgColor_accent_emphasis w-32 h-10 text-white rounded-md top-0 right-6 absolute `}
                             onClick={() => setShowTypeFields(!showTypeFields)}

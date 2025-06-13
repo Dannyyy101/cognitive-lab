@@ -103,8 +103,12 @@ const SubjectView: React.FC<SubjectDisplayProps> = ({ subject }) => {
             </div>
             <div className="w-full mt-4 px-4">
                 <div className="w-full flex">
-                    <p className="text-sm w-1/2 text-fgColor_default">{numberOfExercises} Aufgaben</p>
-                    <p className="text-sm w-1/2 text-right text-fgColor_default">{1} Unter-Themen</p>
+                    <p className="text-sm w-1/2 text-fgColor_default">
+                        {numberOfExercises} {numberOfExercises === 1 ? 'Aufgabe' : 'Aufgaben'}
+                    </p>
+                    <p className="text-sm w-1/2 text-right text-fgColor_default">
+                        {subject.children.length} {subject.children.length === 1 ? 'Unter-Thema' : 'Unter-Themen'}
+                    </p>
                 </div>
                 <ProgressBar progress={rating} color={subject.primaryColor} />
                 <p className="w-full text-right text-sm text-fgColor_disabled mt-1">{rating}% erledigt</p>

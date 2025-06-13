@@ -7,14 +7,21 @@ import { Button } from '@/components/ui/button/Button'
 import { Subject } from '@/types/models/subject'
 import { DEFAULT_SUBJECT } from '@/utils/constants'
 
-export const CreateSubjectView = ({ handleAddSubject }: { handleAddSubject: (subject: Subject) => void }) => {
-    const [subject, setSubject] = useState<Subject>(DEFAULT_SUBJECT)
+export const CreateSubjectView = ({
+    parentId = null,
+    handleAddSubject,
+}: {
+    parentId?: number | null
+    handleAddSubject: (subject: Subject) => void
+}) => {
+    const [subject, setSubject] = useState<Subject>({ ...DEFAULT_SUBJECT, parent: parentId })
     const handlePopClose = usePopUpClose()
 
     const handleCreateSubject = async () => {
         const response = await fetch('/api/subjects', { method: 'POST', body: JSON.stringify(subject) })
         if (response.ok) {
-            handleAddSubject(subject)
+            const data = await response.json()
+            handleAddSubject({ ...subject, id: data.id })
             handlePopClose()
         }
     }
