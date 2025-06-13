@@ -14,7 +14,6 @@ import { ExerciseCard } from '@/components/exercises/ExerciseCard'
 import { ExerciseProvider } from '@/context/ExerciseProvider'
 import { DeleteModal } from '@/components/ui/DeleteModal'
 import { useRouter } from 'next/navigation'
-import { usePathname } from 'next/navigation'
 import { Button } from '@/components/ui/button/Button'
 import { useRefreshStore } from '@/hooks/useRefreshStore'
 
@@ -25,7 +24,6 @@ export default function Page() {
     const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false)
 
     const router = useRouter()
-    const pathname = usePathname()
 
     const handleShowCreateExerciseDialog = (type: string) => {
         setShowTypeFields(false)
@@ -39,10 +37,6 @@ export default function Page() {
             useRefreshStore.getState().triggerRefresh()
             router.back()
         }
-    }
-
-    const handleNavigateBack = () => {
-        router.back()
     }
 
     const handleCreateNewExercise = async (exercise: Exercise) => {
