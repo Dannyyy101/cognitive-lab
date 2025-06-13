@@ -9,3 +9,7 @@ export type Subject = Database['public']['Tables']['subjects']['Row'] & {
 export type BaseSubjectWithExercises = Database['public']['Tables']['subjects']['Row'] & {
     exercises: BaseLearnedExercise[]
 }
+
+export type BaseSubjectWithChildren = Database['public']['Tables']['subjects']['Row'] & {
+    children: BaseSubjectWithExercises[]
+}

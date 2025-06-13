@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
-import { Subject } from '@/types/models/subject'
+import { BaseSubjectWithChildren, BaseSubjectWithExercises, Subject } from '@/types/models/subject'
+import { BaseLearnedExercise, Learned } from '@/types/models/exercise'
 
 export async function GET() {
     const supabase = await createClient()
@@ -27,13 +28,13 @@ export async function GET() {
         return NextResponse.json({ message: 'Not found', status: 404 })
     }
 
-    const filteredData = data?.map((subject) => ({
+    const filteredData = data?.map((subject: BaseSubjectWithChildren) => ({
         ...subject,
-        children: subject.children?.map((child) => ({
+        children: subject.children?.map((child: BaseSubjectWithExercises) => ({
             ...child,
-            exercises: child.exercises?.map((exercise) => ({
+            exercises: child.exercises?.map((exercise: BaseLearnedExercise) => ({
                 ...exercise,
-                learned: exercise.learned?.filter((l) => l.userId === user?.id).length > 0,
+                learned: exercise.learned?.filter((l: Learned) => l.userId === user?.id).length > 0,
             })),
         })),
     }))
