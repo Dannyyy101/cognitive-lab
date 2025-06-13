@@ -81,7 +81,7 @@ interface SubjectDisplayProps {
 const SubjectView: React.FC<SubjectDisplayProps> = ({ subject }) => {
     const numberOfExercises = subject.children.reduce((sum: number, e: Subject) => sum + e.exercises.length, 0)
     const learnedExercises = subject.children.reduce(
-        (sum: number, child) => sum + child.exercises.filter((e: Exercise) => e.learned).length,
+        (sum: number, child: Subject) => sum + child.exercises.filter((e: Exercise) => e.learned).length,
         0
     )
     const rating = Math.round(learnedExercises !== 0 ? (learnedExercises / numberOfExercises) * 100 : 0)
