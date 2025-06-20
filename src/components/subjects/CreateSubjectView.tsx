@@ -6,15 +6,27 @@ import { ColorPicker } from '@/components/ColorPicker'
 import { Button } from '@/components/ui/button/Button'
 import { Subject } from '@/types/models/subject'
 import { DEFAULT_SUBJECT } from '@/utils/constants'
+import { boolean } from 'zod'
 
-export const CreateSubjectView = ({
-    parentId = null,
-    handleAddSubject,
-}: {
+interface CreateSubjectViewProps {
+    selectColor?: boolean
+    defaultColor?: { primaryColor: string; secondaryColor: string }
     parentId?: number | null
     handleAddSubject: (subject: Subject) => void
+}
+
+export const CreateSubjectView: React.FC<CreateSubjectViewProps> = ({
+    parentId = null,
+    handleAddSubject,
+    defaultColor,
+    selectColor = true,
 }) => {
-    const [subject, setSubject] = useState<Subject>({ ...DEFAULT_SUBJECT, parent: parentId })
+    const [subject, setSubject] = useState<Subject>({
+        ...DEFAULT_SUBJECT,
+        parent: parentId,
+        primaryColor: defaultColor?.primaryColor || '#fff',
+        secondaryColor: defaultColor?.secondaryColor || '#fff',
+    })
     const handlePopClose = usePopUpClose()
 
     const handleCreateSubject = async () => {
@@ -37,16 +49,18 @@ export const CreateSubjectView = ({
             />
             <label className={'mt-2'}>Beschreibung</label>
             <textarea className={'border border-black rounded-md resize-none pl-2'}></textarea>
-            <section className={'mt-2'}>
-                <ColorPicker
-                    name={'PrimaryColor'}
-                    onChange={(e) => setSubject({ ...subject, primaryColor: e })}
-                ></ColorPicker>
-                <ColorPicker
-                    name={'SecondaryColor'}
-                    onChange={(e) => setSubject({ ...subject, secondaryColor: e })}
-                ></ColorPicker>
-            </section>
+            {selectColor && (
+                <section className={'mt-2'}>
+                    <ColorPicker
+                        name={'PrimaryColor'}
+                        onChange={(e) => setSubject({ ...subject, primaryColor: e })}
+                    ></ColorPicker>
+                    <ColorPicker
+                        name={'SecondaryColor'}
+                        onChange={(e) => setSubject({ ...subject, secondaryColor: e })}
+                    ></ColorPicker>
+                </section>
+            )}
             <Button onClick={handleCreateSubject} variant={'primary'} className={'mt-4'}>
                 Erstellen
             </Button>

@@ -19,7 +19,7 @@ export const ExerciseCard: React.FC<ExerciseCardProps> = ({ exercise, edit, onCh
                     'w-[900px] h-[420px] border border-l-4 border-l-fgColor_accent border-borderColor_default rounded-md flex flex-col justify-end'
                 }
             >
-                <div className={'h-full overflow-y-auto'}>
+                <div className={`h-full overflow-y-auto ${edit && 'flex'}`}>
                     <ExerciseQuestionComponent edit={edit} />
                     <ExerciseAnswerComponent showAnswer={showAnswer} edit={edit} />
                 </div>

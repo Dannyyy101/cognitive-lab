@@ -22,7 +22,7 @@ export default function Page() {
     const router = useRouter()
 
     const handleDeleteSubject = async () => {
-        //await deleteSubjectById(subject.id)
+        await fetch(`/api/subjects/${subject.id}`, { method: 'DELETE' })
         router.push('/')
     }
 
@@ -51,7 +51,7 @@ export default function Page() {
                             variant="danger"
                             onClick={() => setShowDeletePopUp(true)}
                             disabled={subject.children.length > 0}
-                            className={`absolute right-40 w-32 h-10 rounded-mdtop-0`}
+                            className={`absolute right-40 w-32 h-10 rounded-md top-0`}
                         >
                             Löschen
                         </Button>
@@ -78,7 +78,15 @@ export default function Page() {
                 </section>
                 {showCrateSubjectView && (
                     <PopUpView handlePopUpClose={() => setShowCreateSubjectView(false)}>
-                        <CreateSubjectView parentId={subject.id} handleAddSubject={handleAddSubject} />
+                        <CreateSubjectView
+                            defaultColor={{
+                                primaryColor: subject.primaryColor,
+                                secondaryColor: subject.secondaryColor,
+                            }}
+                            selectColor={false}
+                            parentId={subject.id}
+                            handleAddSubject={handleAddSubject}
+                        />
                     </PopUpView>
                 )}
                 {showDeletePopUp && (

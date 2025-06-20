@@ -24,6 +24,13 @@ export default function Learn() {
 
     if (loading) return <div></div>
 
+    if (exercises.length === 0)
+        return (
+            <div className={'absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2'}>
+                Keine Aufgaben ausgewählt
+            </div>
+        )
+
     const handleNextPage = () => {
         if (index < exercises.length - 1) {
             setIndex(index + 1)
