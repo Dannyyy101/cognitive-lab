@@ -14,11 +14,13 @@ import { Subject } from '@/types/models/subject'
 import { DeleteModal } from '@/components/ui/DeleteModal'
 import { CreateSubjectView } from '@/components/subjects/CreateSubjectView'
 import { Button } from '@/components/ui/button/Button'
+import { CheckIconGreen, XIconRed } from '@/components/ui/Icons'
 
 export default function Page() {
     const [showDeletePopUp, setShowDeletePopUp] = useState<boolean>(false)
     const [showCrateSubjectView, setShowCreateSubjectView] = useState<boolean>(false)
     const { subject, setSubject } = useSubject()
+    const [subjectName, setSubjectName] = useState<string>(subject.name)
     const router = useRouter()
 
     const handleDeleteSubject = async () => {
@@ -34,6 +36,20 @@ export default function Page() {
         setSubject({ ...subject, children: [...subject.children, newSubject] })
     }
 
+    const handleUpdateSubjectName = async () => {
+        const newSubject = { ...subject, name: subjectName }
+        const response = await fetch(`/api/subjects/${subject.id}`, {
+            body: JSON.stringify(newSubject),
+            method: 'PUT',
+        })
+
+        if (response.ok) setSubject(newSubject)
+    }
+
+    const handleResetSubjectName = () => {
+        setSubjectName(subject.name)
+    }
+
     return (
         <main className="flex h-screen items-center mt-32 flex-col relative">
             <IsUserAdmin>
@@ -43,10 +59,20 @@ export default function Page() {
                             <Image src={bookIcon} alt={'book-icon'} width={32} height={32} className="filter invert" />
                         </div>
                         <input
-                            onChange={(e) => setSubject({ ...subject, name: e.target.value })}
-                            value={subject.name}
+                            onChange={(e) => setSubjectName(e.target.value)}
+                            value={subjectName}
                             className="border-borderColor_default border text-fgColor_default text-4xl font-bold pl-2 bg-transparent"
                         />
+                        {subjectName !== subject.name && (
+                            <>
+                                <button onClick={handleResetSubjectName}>
+                                    <XIconRed />
+                                </button>
+                                <button onClick={handleUpdateSubjectName}>
+                                    <CheckIconGreen />
+                                </button>
+                            </>
+                        )}
                         <Button
                             variant="danger"
                             onClick={() => setShowDeletePopUp(true)}

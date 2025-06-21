@@ -12,6 +12,7 @@ export interface ExerciseCardProps {
 
 export const ExerciseCard: React.FC<ExerciseCardProps> = ({ exercise, edit, onChange }) => {
     const [showAnswer, setShowAnswer] = useState<boolean>(false)
+
     return (
         <ExerciseProvider oldExercise={exercise}>
             <section

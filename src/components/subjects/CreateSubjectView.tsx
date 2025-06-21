@@ -40,7 +40,7 @@ export const CreateSubjectView: React.FC<CreateSubjectViewProps> = ({
 
     return (
         <div className={'w-96 h-[500px] p-6 flex flex-col'}>
-            <h1 className={'text-3xl'}>Create Curriculum</h1>
+            <h1 className={'text-3xl text-fgColor_default'}>Create Curriculum</h1>
             <label className={'mt-4'}>Name</label>
             <input
                 className={'w-full h-10 pl-2 rounded-md border border-black'}

@@ -7,7 +7,7 @@ import bookIcon from '@/media/book.svg'
 import { IsUserAdmin } from '@/components/auth/IsUserAdmin'
 import { Exercise } from '@/types/models/exercise'
 import { ExerciseQuestionComponent } from '@/components/exercises/display/ExerciseQuestionComponent'
-import { CheckIconGreen, TrashIcon } from '@/components/ui/Icons'
+import { CheckIconGreen, TrashIcon, XIconRed } from '@/components/ui/Icons'
 import { DEFAULT_EXERCISE, TYPES } from '@/utils/constants'
 import { PopUpView } from '@/components/PopUpView'
 import { ExerciseCard } from '@/components/exercises/ExerciseCard'
@@ -51,10 +51,17 @@ export default function Page() {
     }
 
     const handleUpdateSubjectName = async () => {
-        await fetch(`/api/subjects/${subject.id}`, {
-            body: JSON.stringify({ ...subject, name: subjectName }),
+        const newSubject = { ...subject, name: subjectName }
+        const response = await fetch(`/api/subjects/${subject.id}`, {
+            body: JSON.stringify(newSubject),
             method: 'PUT',
         })
+
+        if (response.ok) setSubject(newSubject)
+    }
+
+    const handleResetSubjectName = () => {
+        setSubjectName(subject.name)
     }
 
     return (
@@ -79,7 +86,9 @@ export default function Page() {
                     />
                     {subjectName !== subject.name && (
                         <>
-                            <button onClick={handleUpdateSubjectName}></button>
+                            <button onClick={handleResetSubjectName}>
+                                <XIconRed />
+                            </button>
                             <button onClick={handleUpdateSubjectName}>
                                 <CheckIconGreen />
                             </button>

@@ -27,7 +27,7 @@ export async function GET() {
     if (!data) {
         return NextResponse.json({ message: 'Not found', status: 404 })
     }
-    console.log(data)
+
     const filteredData = data?.map((subject: BaseSubjectWithChildren) => ({
         ...subject,
         children: subject.children?.map((child: BaseSubjectWithExercises) => ({

@@ -47,7 +47,6 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
     const supabase = await createClient()
 
     const { error } = await supabase.from('subjects').update(subject).eq('id', subjectId)
-    console.error(error)
     if (error) return NextResponse.json({ message: error.message }, { status: 500 })
 
     return NextResponse.json({ message: 'Updated' }, { status: 200 })

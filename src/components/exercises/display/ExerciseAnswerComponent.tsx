@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { isAnswerCorrect } from '@/utils/exerciseFunctions'
 import { useExercise } from '@/context/ExerciseProvider'
 import { TrashIcon } from '@/components/ui/Icons'
@@ -6,6 +6,7 @@ import { TrashIcon } from '@/components/ui/Icons'
 export const ExerciseAnswerComponent: React.FC<{ showAnswer: boolean; edit?: boolean }> = ({ showAnswer, edit }) => {
     const [userInput, setUserInput] = useState<string>('')
     const [isCorrect, setIsCorrect] = useState<boolean>(false)
+    const [learned, setLearned] = useState<boolean>(false)
 
     const { exercise, setExercise } = useExercise()
 
@@ -26,6 +27,21 @@ export const ExerciseAnswerComponent: React.FC<{ showAnswer: boolean; edit?: boo
             content: { ...exercise.content, answer: exercise.content.answer.toSpliced(index, 1) },
         })
     }
+    useEffect(() => {
+        console.log(learned)
+        if (!edit && showAnswer && !learned) {
+            console.log(learned)
+            fetch(`/api/exercises/${exercise.id}/learned`, {
+                body: JSON.stringify({ correct: isCorrect }),
+                method: 'POST',
+            }).then((response) => {
+                console.log('ok', response.ok)
+                if (response.ok) {
+                    setLearned(true)
+                }
+            })
+        }
+    }, [showAnswer])
 
     switch (exercise.type) {
         case 'text':
