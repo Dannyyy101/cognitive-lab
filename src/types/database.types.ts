@@ -46,18 +46,21 @@ export type Database = {
       }
       learnedExercises: {
         Row: {
+          correct: boolean
           created_at: string
           exerciseId: number
           id: number
           userId: string
         }
         Insert: {
+          correct: boolean
           created_at?: string
           exerciseId: number
           id?: number
           userId?: string
         }
         Update: {
+          correct?: boolean
           created_at?: string
           exerciseId?: number
           id?: number

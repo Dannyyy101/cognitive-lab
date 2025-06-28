@@ -8,7 +8,7 @@ export const DEFAULT_EXERCISE: Exercise = {
     id: -1,
     type: '',
     title: '',
-    content: { question: '', answer: '' },
+    content: { question: '', answer: [''] },
     learned: false,
     subjectId: -1,
     created_at: new Date().toDateString(),

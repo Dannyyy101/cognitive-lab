@@ -7,12 +7,12 @@ export type BaseLearnedExercise = BaseExercise & {
 }
 
 export type Exercise = Omit<BaseExercise, 'content'> & {
-    content: { question: string; answer: string }
+    content: { question: string; answer: string[] }
     learned: boolean
 }
 
 export type ExerciseText = Exercise & {
-    content: { question: string; answer: string }
+    content: { question: string; answer: string[] }
 }
 
 export type Learned = Database['public']['Tables']['learnedExercises']['Row']

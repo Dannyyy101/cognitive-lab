@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import { BaseLearnedExercise, Learned } from '@/types/models/exercise'
-import { BaseSubjectWithExercises } from '@/types/models/subject'
+import { BaseSubjectWithExercises, Subject } from '@/types/models/subject'
 
 export async function GET(request: NextRequest, { params }: { params: Promise<{ subjectId: string }> }) {
     const subjectId = parseInt((await params).subjectId)
@@ -39,6 +39,17 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
         })),
     }
     return NextResponse.json(filteredData)
+}
+
+export async function PUT(request: NextRequest, { params }: { params: Promise<{ subjectId: string }> }) {
+    const subjectId = parseInt((await params).subjectId)
+    const { children: _children, exercises: _exercises, id: _id, ...subject } = (await request.json()) as Subject
+    const supabase = await createClient()
+
+    const { error } = await supabase.from('subjects').update(subject).eq('id', subjectId)
+    if (error) return NextResponse.json({ message: error.message }, { status: 500 })
+
+    return NextResponse.json({ message: 'Updated' }, { status: 200 })
 }
 
 export async function DELETE(request: NextRequest, { params }: { params: Promise<{ subjectId: string }> }) {

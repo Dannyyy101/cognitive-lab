@@ -1,7 +1,7 @@
 import { ExerciseQuestionComponent } from '@/components/exercises/display/ExerciseQuestionComponent'
 import { ExerciseAnswerComponent } from '@/components/exercises/display/ExerciseAnswerComponent'
 import { Exercise } from '@/types/models/exercise'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { ExerciseProvider, useExercise } from '@/context/ExerciseProvider'
 
 export interface ExerciseCardProps {
@@ -12,6 +12,11 @@ export interface ExerciseCardProps {
 
 export const ExerciseCard: React.FC<ExerciseCardProps> = ({ exercise, edit, onChange }) => {
     const [showAnswer, setShowAnswer] = useState<boolean>(false)
+
+    useEffect(() => {
+        setShowAnswer(false)
+    }, [exercise])
+
     return (
         <ExerciseProvider oldExercise={exercise}>
             <section
@@ -19,7 +24,7 @@ export const ExerciseCard: React.FC<ExerciseCardProps> = ({ exercise, edit, onCh
                     'w-[900px] h-[420px] border border-l-4 border-l-fgColor_accent border-borderColor_default rounded-md flex flex-col justify-end'
                 }
             >
-                <div className={'h-full overflow-y-auto'}>
+                <div className={`h-full overflow-y-auto ${edit && 'flex'}`}>
                     <ExerciseQuestionComponent edit={edit} />
                     <ExerciseAnswerComponent showAnswer={showAnswer} edit={edit} />
                 </div>

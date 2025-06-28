@@ -27,7 +27,7 @@ export async function GET() {
     if (!data) {
         return NextResponse.json({ message: 'Not found', status: 404 })
     }
-    console.log(data)
+
     const filteredData = data?.map((subject: BaseSubjectWithChildren) => ({
         ...subject,
         children: subject.children?.map((child: BaseSubjectWithExercises) => ({
@@ -43,7 +43,7 @@ export async function GET() {
 }
 
 export async function POST(req: NextRequest) {
-    const { children: _children, exercises: _exercis, id: _id, ...subject } = (await req.json()) as Subject
+    const { children: _children, exercises: _exercises, id: _id, ...subject } = (await req.json()) as Subject
 
     const supabase = await createClient()
     const { data, error } = await supabase.from('subjects').insert({ ...subject, created_at: new Date().toDateString() }).select().single()

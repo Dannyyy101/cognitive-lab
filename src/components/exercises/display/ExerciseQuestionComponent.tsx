@@ -12,6 +12,7 @@ export const ExerciseQuestionComponent: React.FC<{ edit?: boolean }> = ({ edit }
                 <div className={'flex flex-col p-4'}>
                     {edit ? (
                         <>
+                            <label className={'mt-2 text-2xl font-semibold'}>Titel</label>
                             <input
                                 className={'w-96 border border-borderColor_default rounded-md pl-2 h-10'}
                                 placeholder={'Titel...'}

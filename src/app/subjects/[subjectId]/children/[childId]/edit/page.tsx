@@ -7,7 +7,7 @@ import bookIcon from '@/media/book.svg'
 import { IsUserAdmin } from '@/components/auth/IsUserAdmin'
 import { Exercise } from '@/types/models/exercise'
 import { ExerciseQuestionComponent } from '@/components/exercises/display/ExerciseQuestionComponent'
-import { TrashIcon } from '@/components/ui/Icons'
+import { CheckIconGreen, TrashIcon, XIconRed } from '@/components/ui/Icons'
 import { DEFAULT_EXERCISE, TYPES } from '@/utils/constants'
 import { PopUpView } from '@/components/PopUpView'
 import { ExerciseCard } from '@/components/exercises/ExerciseCard'
@@ -22,6 +22,7 @@ export default function Page() {
     const [showTypeFields, setShowTypeFields] = useState<boolean>(false)
     const [newExercise, setNewExercise] = useState<Exercise | null>(null)
     const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false)
+    const [subjectName, setSubjectName] = useState<string>(subject.name)
 
     const router = useRouter()
 
@@ -49,6 +50,20 @@ export default function Page() {
         setNewExercise(null)
     }
 
+    const handleUpdateSubjectName = async () => {
+        const newSubject = { ...subject, name: subjectName }
+        const response = await fetch(`/api/subjects/${subject.id}`, {
+            body: JSON.stringify(newSubject),
+            method: 'PUT',
+        })
+
+        if (response.ok) setSubject(newSubject)
+    }
+
+    const handleResetSubjectName = () => {
+        setSubjectName(subject.name)
+    }
+
     return (
         <main className="flex items-center mt-32 flex-col relative">
             {showDeleteModal && (
@@ -64,7 +79,21 @@ export default function Page() {
                     >
                         <Image src={bookIcon} alt={'book-icon'} width={32} height={32} className="filter invert" />
                     </div>
-                    <h1 className="text-fgColor_default text-4xl font-bold pl-2 break-all">{subject.name}</h1>
+                    <input
+                        value={subjectName}
+                        onChange={(e) => setSubjectName(e.target.value)}
+                        className="text-fgColor_default text-4xl font-bold pl-1 ml-2 break-all border border-borderColor_default"
+                    />
+                    {subjectName !== subject.name && (
+                        <>
+                            <button onClick={handleResetSubjectName}>
+                                <XIconRed />
+                            </button>
+                            <button onClick={handleUpdateSubjectName}>
+                                <CheckIconGreen />
+                            </button>
+                        </>
+                    )}
                     <IsUserAdmin>
                         <Button
                             onClick={() => setShowDeleteModal((prev) => !prev)}
@@ -118,6 +147,7 @@ export default function Page() {
 
 const DisplayExercises = ({ exercise }: { exercise: Exercise }) => {
     const [showDeleteExerciseModal, setShowDeleteExerciseModal] = useState<boolean>()
+    const [showUpdateExerciseModal, setShowUpdateExerciseModal] = useState<boolean>()
     const { subject, setSubject } = useSubject()
 
     const handleDeleteExercise = async () => {
@@ -125,8 +155,24 @@ const DisplayExercises = ({ exercise }: { exercise: Exercise }) => {
         setSubject({ ...subject, exercises: subject.exercises.filter((item) => item.id !== exercise.id) })
     }
 
+    const handleUpdateExercise = async (exercise: Exercise) => {
+        const temp = [...subject.exercises]
+        const index = temp.findIndex((item) => item.id === exercise.id)
+        if (index !== -1) {
+            temp[index] = exercise
+        }
+        await fetch(`/api/exercises/${exercise.id}`, { body: JSON.stringify(exercise), method: 'PUT' })
+        setSubject({ ...subject, exercises: temp })
+        setShowUpdateExerciseModal(false)
+    }
+
     return (
         <>
+            {showUpdateExerciseModal && (
+                <PopUpView handlePopUpClose={() => setShowUpdateExerciseModal(false)}>
+                    <ExerciseCard exercise={exercise} edit={true} onChange={handleUpdateExercise}></ExerciseCard>
+                </PopUpView>
+            )}
             {showDeleteExerciseModal && (
                 <PopUpView handlePopUpClose={() => setShowDeleteExerciseModal(false)}>
                     <DeleteModal
@@ -137,9 +183,17 @@ const DisplayExercises = ({ exercise }: { exercise: Exercise }) => {
                     />
                 </PopUpView>
             )}
-            <div className={'w-64 h-32 bg-bgColor_inset border border-borderColor_default rounded-md relative m-2'}>
-                <div className={'absolute top-2 right-4 flex'}>
-                    <button onClick={() => setShowDeleteExerciseModal(true)}>
+            <div
+                onClick={() => setShowUpdateExerciseModal((prev) => !prev)}
+                className={'w-64 h-32 bg-bgColor_inset border border-borderColor_default rounded-md relative m-2'}
+            >
+                <div className={'absolute top-2 right-4 flex z-10'}>
+                    <button
+                        onClick={(e) => {
+                            e.stopPropagation()
+                            setShowDeleteExerciseModal(true)
+                        }}
+                    >
                         <TrashIcon className={'w-6 h-6'} />
                     </button>
                 </div>
