@@ -84,7 +84,7 @@ const SubjectView: React.FC<SubjectDisplayProps> = ({ subject }) => {
         (sum: number, child: Subject) => sum + child.exercises.filter((e: Exercise) => e.learned).length,
         0
     )
-    const rating = Math.round(learnedExercises !== 0 ? (learnedExercises / numberOfExercises) * 100 : 0)
+    const rating = Math.floor(learnedExercises !== 0 ? (learnedExercises / numberOfExercises) * 100 : 0)
 
     const { theme } = useTheme()
 
