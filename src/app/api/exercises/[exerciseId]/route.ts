@@ -16,9 +16,9 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
     const exerciseId = parseInt((await params).exerciseId)
     const body = await request.json()
     const supabase = await createClient()
-
-    const { error } = await supabase.from('exercises').update(body).eq('id', exerciseId)
-
+    const { learned: _learned, ...exercise } = body
+    const { error } = await supabase.from('exercises').update(exercise).eq('id', exerciseId)
+    console.error(error)
     if (error) return NextResponse.json({ message: error.message }, { status: 500 })
 
     return NextResponse.json({ message: 'Updated' }, { status: 200 })

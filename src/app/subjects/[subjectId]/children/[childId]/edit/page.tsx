@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useRef, useState } from 'react'
+import React, { useState } from 'react'
 import { useSubject } from '@/context/SubjectProvider'
 import Image from 'next/image'
 import bookIcon from '@/media/book.svg'
@@ -163,6 +163,7 @@ const DisplayExercises = ({ exercise }: { exercise: Exercise }) => {
         }
         await fetch(`/api/exercises/${exercise.id}`, { body: JSON.stringify(exercise), method: 'PUT' })
         setSubject({ ...subject, exercises: temp })
+        setShowUpdateExerciseModal(false)
     }
 
     return (

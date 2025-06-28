@@ -5,6 +5,7 @@ import { Header } from '@/components/header/Header'
 import React from 'react'
 import { ThemeProvider } from '@/components/Theme'
 import { createClient } from '@/lib/supabase/server'
+import '@primer/primitives/dist/css/functional/themes/light.css'
 
 const geistSans = Geist({
     variable: '--font-geist-sans',

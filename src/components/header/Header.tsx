@@ -20,6 +20,9 @@ export const Header = ({ user }: { user: User | null }) => {
                 <Link className="hover:underline text-fgColor_default text-xl font-semibold px-4" href={'/exercises'}>
                     Aufgaben
                 </Link>
+                <Link className="hover:underline text-fgColor_default text-xl font-semibold px-4" href={'/wiki'}>
+                    Wiki
+                </Link>
                 <IsUserAdmin>
                     <Link className="hover:underline text-fgColor_default text-xl font-semibold px-4" href={'/users'}>
                         Users

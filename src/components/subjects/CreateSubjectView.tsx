@@ -6,7 +6,6 @@ import { ColorPicker } from '@/components/ColorPicker'
 import { Button } from '@/components/ui/button/Button'
 import { Subject } from '@/types/models/subject'
 import { DEFAULT_SUBJECT } from '@/utils/constants'
-import { boolean } from 'zod'
 
 interface CreateSubjectViewProps {
     selectColor?: boolean

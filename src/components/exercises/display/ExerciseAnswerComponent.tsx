@@ -2,13 +2,22 @@ import React, { useEffect, useState } from 'react'
 import { isAnswerCorrect } from '@/utils/exerciseFunctions'
 import { useExercise } from '@/context/ExerciseProvider'
 import { TrashIcon } from '@/components/ui/Icons'
+import { useSession } from '@/hooks/useSession'
+import { Text } from '@/components/text/Text'
 
 export const ExerciseAnswerComponent: React.FC<{ showAnswer: boolean; edit?: boolean }> = ({ showAnswer, edit }) => {
     const [userInput, setUserInput] = useState<string>('')
     const [isCorrect, setIsCorrect] = useState<boolean>(false)
     const [learned, setLearned] = useState<boolean>(false)
 
+    const session = useSession()
+
     const { exercise, setExercise } = useExercise()
+
+    useEffect(() => {
+        setUserInput('')
+        setLearned(false)
+    }, [exercise])
 
     const isInputCorrect = (e: string) => {
         setUserInput(e)
@@ -28,9 +37,8 @@ export const ExerciseAnswerComponent: React.FC<{ showAnswer: boolean; edit?: boo
         })
     }
     useEffect(() => {
-        console.log(learned)
-        if (!edit && showAnswer && !learned) {
-            console.log(learned)
+        if (!edit && showAnswer && !learned && !session.isLearned(exercise.id)) {
+            session.addExercise(exercise, isCorrect)
             fetch(`/api/exercises/${exercise.id}/learned`, {
                 body: JSON.stringify({ correct: isCorrect }),
                 method: 'POST',
@@ -38,6 +46,8 @@ export const ExerciseAnswerComponent: React.FC<{ showAnswer: boolean; edit?: boo
                 console.log('ok', response.ok)
                 if (response.ok) {
                     setLearned(true)
+                } else {
+                    session.removeExercise(exercise.id)
                 }
             })
         }
@@ -99,11 +109,11 @@ export const ExerciseAnswerComponent: React.FC<{ showAnswer: boolean; edit?: boo
                             >
                                 Lösung
                             </label>
-                            <p
+                            <Text
                                 className={`resize-none border rounded-md w-96 h-32 p-2 ${isCorrect ? 'text-fgColor_success border-borderColor_success_emphasis' : 'text-fgColor_danger border-borderColor_danger_emphasis'}`}
                             >
-                                {exercise.content.answer}
-                            </p>
+                                {exercise.content.answer.join('\n')}
+                            </Text>
                         </div>
                     )}
                 </div>
