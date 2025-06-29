@@ -49,13 +49,13 @@ export default function Page() {
             <IsUserAdmin>
                 <button
                     onClick={() => setShowCreateSubjectView(true)}
-                    className="w-32 h-10 top-32 right-10 bg-bgColor_inverse absolute rounded-md text-bgColor_default"
+                    className="w-32 h-10 top-32 right-4 bg-bgColor_inverse absolute rounded-md text-bgColor_default"
                 >
                     Erstellen
                 </button>
             </IsUserAdmin>
             <input
-                className="mt-32 w-96 bg-transparent border-borderColor_default border h-12 pl-2 rounded-md text-fgColor_default"
+                className="mt-48 md:mt-32 w-96 bg-transparent border-borderColor_default border h-12 pl-2 rounded-md text-fgColor_default"
                 value={searchInput}
                 onChange={(e) => handleSearchInputChange(e.target.value)}
                 placeholder={'Suche nach Kategorien'}

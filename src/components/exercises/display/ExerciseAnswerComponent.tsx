@@ -56,9 +56,9 @@ export const ExerciseAnswerComponent: React.FC<{ showAnswer: boolean; edit?: boo
     switch (exercise.type) {
         case 'text':
             return (
-                <div className={'flex w-full'}>
-                    <div className={`flex flex-col p-4 ${edit ? 'w-full' : 'w-1/2'}`}>
-                        <label className={'mt-2 text-2xl font-semibold'}>Deine Antwort</label>
+                <div className={'flex md:flex-row flex-col w-full mb-2'}>
+                    <div className={`flex flex-col mx-2 ${edit ? 'w-full' : 'w-1/2'}`}>
+                        <label className={'text-2xl font-semibold'}>Deine Antwort</label>
                         {edit ? (
                             <div className="flex flex-col w-full">
                                 {exercise.content.answer.map((item: string, index: number) => (
@@ -103,7 +103,7 @@ export const ExerciseAnswerComponent: React.FC<{ showAnswer: boolean; edit?: boo
                         )}
                     </div>
                     {showAnswer && (
-                        <div className={`flex flex-col p-4 w-1/2`}>
+                        <div className={`flex flex-col mx-2 w-1/2`}>
                             <label
                                 className={`text-2xl font-semibold ${isCorrect ? 'text-fgColor_success' : 'text-fgColor_danger'}`}
                             >

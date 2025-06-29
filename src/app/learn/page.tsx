@@ -93,9 +93,9 @@ export default function Learn() {
 
     return (
         <main className={'w-screen h-screen flex flex-col items-center justify-center relative'}>
-            <p className="absolute top-32 right-10 tabular-nums">{convertSecondsToTime(timer)}</p>
+            <p className="absolute top-24 md:top-32 right-4 md:right-10 tabular-nums">{convertSecondsToTime(timer)}</p>
             <ExerciseCard exercise={exercises[index]} />
-            <div className={'mt-8'}>
+            <div className={'md:mt-8 mt-4'}>
                 <button
                     className={'w-32 h-10 border border-borderColor_default rounded-md text-black mx-1'}
                     onClick={handlePreviousPage}
