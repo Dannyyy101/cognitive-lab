@@ -21,14 +21,14 @@ export const ExerciseCard: React.FC<ExerciseCardProps> = ({ exercise, edit, onCh
         <ExerciseProvider oldExercise={exercise}>
             <section
                 className={
-                    'w-[900px] h-[420px] border border-l-4 border-l-fgColor_accent border-borderColor_default rounded-md flex flex-col justify-end'
+                    'mt-28 w-screen md:w-[750px] h-[500px] border border-l-4 border-l-fgColor_accent border-borderColor_default rounded-md flex flex-col justify-end'
                 }
             >
                 <div className={`h-full overflow-y-auto ${edit && 'flex'}`}>
                     <ExerciseQuestionComponent edit={edit} />
                     <ExerciseAnswerComponent showAnswer={showAnswer} edit={edit} />
                 </div>
-                <div className={'border-t border-borderColor_default h-32 flex items-center px-4 justify-end'}>
+                <div className={'border-t border-borderColor_default h-20 flex items-center px-4 justify-end'}>
                     {edit && onChange ? (
                         <ExerciseSaveButton onChange={onChange} />
                     ) : (

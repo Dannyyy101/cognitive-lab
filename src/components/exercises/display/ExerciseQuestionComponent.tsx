@@ -9,7 +9,7 @@ export const ExerciseQuestionComponent: React.FC<{ edit?: boolean }> = ({ edit }
         case 'text':
             const textExercise = exercise as ExerciseText
             return (
-                <div className={'flex flex-col p-4'}>
+                <div className={'flex flex-col ml-2 mt-4'}>
                     {edit ? (
                         <>
                             <label className={'mt-2 text-2xl font-semibold'}>Titel</label>

@@ -61,11 +61,11 @@ export default function Page() {
                         <input
                             onChange={(e) => setSubjectName(e.target.value)}
                             value={subjectName}
-                            className="border-borderColor_default border text-fgColor_default text-4xl font-bold pl-2 bg-transparent"
+                            className="ml-1 max-w-96 border-borderColor_default border text-fgColor_default text-4xl font-bold pl-1 bg-transparent"
                         />
                         {subjectName !== subject.name && (
                             <>
-                                <button onClick={handleResetSubjectName}>
+                                <button className="ml-2" onClick={handleResetSubjectName}>
                                     <XIconRed />
                                 </button>
                                 <button onClick={handleUpdateSubjectName}>
@@ -77,13 +77,13 @@ export default function Page() {
                             variant="danger"
                             onClick={() => setShowDeletePopUp(true)}
                             disabled={subject.children.length > 0}
-                            className={`absolute right-40 w-32 h-10 rounded-md top-0`}
+                            className={`absolute right-40 w-32 h-10 rounded-md -top-6 md:top-0`}
                         >
                             Löschen
                         </Button>
                         <button
                             onClick={handleNavigateBack}
-                            className="absolute right-4 w-32 h-10 rounded-md bg-bgColor_inverse text-bgColor_default font-semibold top-0"
+                            className="absolute right-4 w-32 h-10 rounded-md bg-bgColor_inverse text-bgColor_default font-semibold -top-6 md:top-0"
                         >
                             Zurück
                         </button>

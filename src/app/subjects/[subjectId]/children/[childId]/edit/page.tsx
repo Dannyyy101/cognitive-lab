@@ -6,12 +6,10 @@ import Image from 'next/image'
 import bookIcon from '@/media/book.svg'
 import { IsUserAdmin } from '@/components/auth/IsUserAdmin'
 import { Exercise } from '@/types/models/exercise'
-import { ExerciseQuestionComponent } from '@/components/exercises/display/ExerciseQuestionComponent'
 import { CheckIconGreen, TrashIcon, XIconRed } from '@/components/ui/Icons'
 import { DEFAULT_EXERCISE, TYPES } from '@/utils/constants'
 import { PopUpView } from '@/components/PopUpView'
 import { ExerciseCard } from '@/components/exercises/ExerciseCard'
-import { ExerciseProvider } from '@/context/ExerciseProvider'
 import { DeleteModal } from '@/components/ui/DeleteModal'
 import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button/Button'
@@ -82,11 +80,11 @@ export default function Page() {
                     <input
                         value={subjectName}
                         onChange={(e) => setSubjectName(e.target.value)}
-                        className="text-fgColor_default text-4xl font-bold pl-1 ml-2 break-all border border-borderColor_default"
+                        className="max-w-96 ml-1 text-fgColor_default text-4xl font-bold pl-1 break-all border border-borderColor_default"
                     />
                     {subjectName !== subject.name && (
                         <>
-                            <button onClick={handleResetSubjectName}>
+                            <button className="ml-1" onClick={handleResetSubjectName}>
                                 <XIconRed />
                             </button>
                             <button onClick={handleUpdateSubjectName}>
@@ -98,13 +96,13 @@ export default function Page() {
                         <Button
                             onClick={() => setShowDeleteModal((prev) => !prev)}
                             variant="danger"
-                            className={`absolute right-40 w-32 h-10 rounded-md font-semibold top-0`}
+                            className={`absolute right-40 w-32 h-10 rounded-md font-semibold -top-6 md:top-0`}
                             disabled={subject.exercises.length > 0}
                         >
                             Löschen
                         </Button>
                         <button
-                            className={`bg-bgColor_accent_emphasis w-32 h-10 text-white rounded-md top-0 right-6 absolute `}
+                            className={`bg-bgColor_accent_emphasis w-32 h-10 text-white rounded-md -top-6 md:top-0 right-6 absolute `}
                             onClick={() => setShowTypeFields(!showTypeFields)}
                         >
                             Erstellen
@@ -185,7 +183,7 @@ const DisplayExercises = ({ exercise }: { exercise: Exercise }) => {
             )}
             <div
                 onClick={() => setShowUpdateExerciseModal((prev) => !prev)}
-                className={'w-64 h-32 bg-bgColor_inset border border-borderColor_default rounded-md relative m-2'}
+                className={'w-64 h-32 bg-bgColor_inset border border-borderColor_default rounded-md relative m-2 p-2'}
             >
                 <div className={'absolute top-2 right-4 flex z-10'}>
                     <button
@@ -197,10 +195,10 @@ const DisplayExercises = ({ exercise }: { exercise: Exercise }) => {
                         <TrashIcon className={'w-6 h-6'} />
                     </button>
                 </div>
-                <ExerciseProvider oldExercise={exercise}>
-                    <ExerciseQuestionComponent />
-                </ExerciseProvider>
-                <label className={'bg-bgColor_accent_muted rounded-xl text-fgColor_accent px-2 py-0.5 ml-2'}>
+                <h2 className="text-xl font-semibold overflow-y-auto">{exercise.title}</h2>
+                <label
+                    className={'px-2 bg-bgColor_accent_muted rounded-xl text-fgColor_accent absolute bottom-2 left-2'}
+                >
                     {exercise.type}
                 </label>
             </div>
